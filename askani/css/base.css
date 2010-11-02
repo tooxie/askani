@@ -1,0 +1,82 @@
+body {
+    font:12px/1.4em Verdana,sans-serif;
+    background:#326342 url('django.png') no-repeat fixed right bottom;
+}
+a {
+    color:#FFC757;
+    text-decoration:none;
+}
+a:hover {
+    color:#FFE761;
+}
+#toolbar, #output-toolbar {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+#toolbar li, #output-toolbar li {
+    display:inline;
+    margin-right:2em;
+}
+.hidden {
+    display:none;
+}
+.ui-state-error, .ui-state-highlight {
+    margin:.7em;
+    padding:0 .7em;
+}
+.ui-state-highlight {
+    margin-top:20px;
+}
+.ui-icon-alert, .ui-icon-info {
+    float:left;
+    margin-right:.3em;
+}
+.ui-draggable {
+    border:1px solid black;
+}
+.ui-draggable-dragging {
+    border:1px solid gray;
+    color:gray;
+}
+.ui-draggable-dragging .model-name, .ui-draggable-dragging .model-fields {
+    border-bottom:1px solid gray;
+}
+.model {
+    background-color:white;
+    float:left;
+    min-height:150px;
+    min-width:150px;
+    margin:2.5em 0 0 1em;
+    cursor:move;
+    padding-bottom:1em;
+}
+.model a {
+    color:#AB5603;
+}
+.model a:hover {
+    background-color:#E0FFB8;
+    color:#234F32;
+    text-decoration:none;
+}
+.model-name {
+    border-bottom:1px solid black;
+    cursor:pointer;
+    padding:0 1em;
+    text-align:center;
+}
+.model-fields, .model-methods {
+    font-size:.9em;
+    padding:0 .5em;
+}
+.model-fields {
+    border-bottom:1px solid black;
+}
+.action-new {
+    text-align:left;
+}
+#output {
+    background-color:rgba(50, 99, 66, 0.7); /* #326342; */
+    padding:1em;
+    cursor:move;
+}

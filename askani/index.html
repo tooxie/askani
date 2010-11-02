@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+        "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Django models generator interface - django-cape</title>
+        <script type="text/javascript" src="js/json2-min.js"></script>
+        <script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+        <script type="text/javascript" src="js/underscore-1.1.0-min.js"></script>
+        <script type="text/javascript" src="js/backbone-min.js"></script>
+        <script type="text/javascript" src="js/backbone-localstorage-min.js"></script>
+        <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/exceptions.js"></script>
+        <script type="text/javascript" src="js/models.js"></script>
+        <script type="text/javascript" src="js/collections.js"></script>
+        <script type="text/javascript" src="js/views.js"></script>
+        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="Stylesheet" />
+        <link type="text/css" href="css/base.css" rel="Stylesheet" />
+    </head>
+    <body>
+        <!-- Toolbar -->
+        <ul id="toolbar">
+            <li>
+                <a href="#" id="new-model">[+] New model</a>
+            </li>
+            <li>
+                <a href="#" id="to-python">[~] To python</a>
+            </li>
+            <li>
+                <a href="#" id="kill-all">[!] Kill all</a>
+            </li>
+        </ul>
+
+        <!-- Messages -->
+        <div id="messages"></div>
+
+        <!-- Workspace -->
+        <div id="workspace"></div>
+
+        <!-- Templates -->
+        <script type="text/template" id="model-template">
+            <div class="model ui-draggable" id="<%= id %>" style="position:relative; left:<%= x %>; top:<%= y %>;">
+                <div class="model-name">
+                    <%= name %>
+                </div>
+                <div class="model-fields">
+                    <div class="action-new">
+                        <a href="#" class="new-field" id="attr-<%= id %>">[+] New field</a>
+                    </div>
+                </div>
+                <div class="model-methods">
+                    <div class="action-new">
+                        <a href="#" class="new-method" id="func-<%= id %>">[+] New method</a>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" id="model-field-template">
+            <div class="field" id="<%= id %>">
+                <span class="name"><%= name %></span>
+                <span class="value"><%= value %></span>
+            </div>
+        </script>
+
+        <script type="text/template" id="model-method-template">
+            <div class="method" id="<%= id %>">
+                <span class="name"><%= name %>()</span>
+            </div>
+        </script>
+
+        <script type="text/template" id="model-metadata-template">
+            <div class="metadata">
+                <span class="name"><%= name %></span>
+                <span class="value"><%= value %></span>
+            </div>
+        </script>
+
+        <!-- Warnings -->
+        <script type="text-template" id="warning-template">
+            <div class="ui-widget">
+                <div class="ui-state-highlight ui-corner-all">
+                    <p>
+                        <span class="ui-icon ui-icon-info"></span>
+                        <strong>Hey!</strong> <%= message %><% if(code) { %> (<%= code %>)<% } %>
+                    </p>
+                </div>
+            </div>
+        </script>
+
+        <!-- Errors -->
+        <script type="text-template" id="error-template">
+            <div class="errorholder ui-widget">
+                <div class="ui-state-error ui-corner-all">
+                    <p>
+                        <span class="ui-icon ui-icon-alert"></span>
+                        <strong>Alert:</strong> <%= message %><% if(code) { %> (<%= code %>)<% } %>
+                    </p>
+                </div>
+            </div>
+        </script>
+
+        <div id="output" class="hidden">
+            <textarea id="code" cols="80" rows="20"></textarea>
+            <ul id="output-toolbar">
+                <li>
+                    <a href="#" id="output-close">[x] Close</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Don't use XHTML:
+            http://www.tangerinesmash.com/2007/html-vs-xhtml-best-tool-job/
+            http://webkit.org/blog/68/understanding-html-xml-and-xhtml/
+            https://developer.mozilla.org/en/Mozilla_Web_Developer_FAQ
+        -->
+        <!-- :wq -->
+    </body>
+</html>
