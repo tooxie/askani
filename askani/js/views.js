@@ -102,6 +102,7 @@ $(function () {
         events: {
             // Toolbar
             "click #to-python": "toPython",
+            "click #to-json": "toJSON",
             "click #kill-all": "destroyTheWorld",
             "click #output-close": "closeOutput",
 
@@ -175,6 +176,12 @@ $(function () {
                 }
             }
             $('#code').val(code.trim()).focus();
+            $('#output').draggable().css('position', 'absolute').css('z-index', 1001).fadeIn();
+            return false;
+        },
+
+        toJSON: function(e) {
+            $('#code').val(JSON.stringify(DjangoModels, null, 2)).focus();
             $('#output').draggable().css('position', 'absolute').css('z-index', 1001).fadeIn();
             return false;
         },
