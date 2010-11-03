@@ -9,7 +9,8 @@
 /*global
          $,
          App,
-         DjangoModels
+         DjangoModels,
+         jQuery
  */
 String.prototype.toCamelCase = function () {
     var bits, new_val = "", x;
@@ -26,6 +27,70 @@ String.prototype.toCamelCase = function () {
     }
     return new_val;
 };
+
+(function ($) {
+    $.jGetHolder = function (message, extra) {
+        var extra_html, extra_id, html, id;
+        extra_html = extra ? '' : message;
+        id = 'askani-message-holder';
+        if (!$('#' + id).size()) {
+            html = '<span id="' + id + '" style="display:none;"></span>';
+            $('body').append(html);
+        }
+        if (extra === 'input') {
+            extra_id = id + '-input';
+            extra_html += '<label for="' + extra_id + '">' + message + '</label>';
+            extra_html += '<p><input type="text" id="' + extra_id + '" name="' + extra_id + '"></p>';
+            $('#' + id).html('<p>' + extra_html + '</p>');
+            $('#' + extra_id).keypress(function (e) {
+                if (e.keyCode === 13) {
+                    $('#' + id).dialog('close');
+                }
+            });
+            return $('#' + id);
+        } else {
+            return $('#' + id).html('<p>' + message + '</p>');
+        }
+    };
+    $.jDefaults = {
+        title: 'Attention',
+        modal: true,
+        show: 'fade',
+        hide: 'fade'
+    };
+    $.jAlert = function (message, options) {
+        options = options ? options : {};
+        $.jGetHolder(message).dialog($.extend($.jDefaults, options));
+    };
+    $.jPrompt = function (message, options) {
+        options = options ? options : {};
+        $.jGetHolder(message, 'input').dialog($.extend($.jDefaults, {
+            title: 'Input required',
+            close: function (event, ui) {
+                console.info(event);
+            },
+            buttons: {
+                'OK': function (dialog) {
+                    $(this).dialog('close');
+                }
+            }
+        }, options));
+    };
+    $.jConfirm = function (message, options) {
+        options = options ? options : {};
+        $.jGetHolder(message).dialog($.extend($.jDefaults, {
+            buttons: {
+                'OK': function (dialog) {
+                    console.info(dialog);
+                    $(this).dialog('close');
+                },
+                Cancel: function (dialog) {
+                    $(this).dialog('close');
+                }
+            }
+        }, options));
+    };
+})(jQuery);
 
 function modelToPython(model) {
     var code, field, field_count, method, method_count, value, x;

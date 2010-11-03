@@ -80,3 +80,10 @@ a:hover {
     padding:1em;
     cursor:move;
 }
+.ui-dialog-content p {
+    margin:0 1em;
+}
+.ui-dialog-content p input {
+    margin-top:1em;
+    width:97%;
+}
