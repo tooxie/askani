@@ -35,12 +35,9 @@ a:hover {
 .ui-draggable {
     border:1px solid black;
 }
-.ui-draggable-dragging {
-    border:1px solid gray;
-    color:gray;
-}
-.ui-draggable-dragging .model-name, .ui-draggable-dragging .model-fields {
-    border-bottom:1px solid gray;
+.ui-sortable-placeholder {
+    border:1px dashed black;
+    height:1.4em;
 }
 .model {
     background-color:white;

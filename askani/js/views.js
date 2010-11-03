@@ -148,6 +148,17 @@ $(function () {
             }
             */
             this.render();
+            sortable_args = {
+                placeholder: "ui-sortable-placeholder",
+                revert: true,
+                change: function (e, ui) {
+                    $(ui.placeholder).hide().slideDown();
+                }
+            };
+            $('.model-fields').sortable(sortable_args);
+            $('.model-fields').disableSelection();
+            $('.model-methods').sortable(sortable_args);
+            $('.model-methods').disableSelection();
         },
 
         render: function () {
