@@ -114,7 +114,7 @@ $(function () {
             // Models
             "click #new-model": "newModel",
             "click .model": "raiseModel",
-            "click .model-name": "changeModelName",
+            "click .model-name": "promptNewModelName",
             "dblclick .model": "destroyModel",
             "dragstop .model": "saveModelCoords",
 
@@ -215,10 +215,16 @@ $(function () {
         },
 
         // Model
-        newModel: function (e) {
+        newModel: function (obj) {
             var model, view;
+            if (typeof obj !== "string") {
+                $.jPrompt('Model name:', {submit: function (name) {
+                    App.newModel(name);
+                }});
+                return false;
+            }
             try {
-                model = DjangoModels.create({name: prompt('Model name')});
+                model = DjangoModels.create({name: obj});
             } catch (err) {
                 this.report(err);
                 return false;
@@ -248,11 +254,19 @@ $(function () {
             });
         },
 
-        changeModelName: function (e) {
+        promptNewModelName: function (e) {
+            $.jPrompt('New name:', {submit: function (name, context) {
+                App.changeModelName(name, context);
+            }, context: e});
+            return false;
+        },
+
+        changeModelName: function (name, e) {
+            var model;
             // FIXME: Decouple the class name.
-            var model = DjangoModels.get($(e.target).closest('.model').attr('id'));
+            model = DjangoModels.get($(e.target).closest('.model').attr('id'));
             try {
-                model.save({name: prompt('New name')});
+                model.save({name: name});
             } catch (err) {
                 this.report(err);
             }
@@ -306,12 +320,19 @@ $(function () {
 
         // Method
         newMethod: function (e) {
-            // Repeated code, can be DRY'ed?
+            $.jPrompt('Method name:', {submit: function (name, context) {
+                App.createMethod(name, context);
+            }, context: e});
+            return false;
+        },
+
+        createMethod: function (name, e) {
             var method, methods, model, view;
+            // Repeated code, can be DRY'ed?
             try {
                 model = DjangoModels.get($(e.target).closest('.model').attr('id'));
                 methods = model.get('methods');
-                method = methods.create({name: prompt('Method name')});
+                method = methods.create({name: name});
             } catch (err) {
                 this.report(err);
                 return false;

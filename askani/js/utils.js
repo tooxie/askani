@@ -49,7 +49,7 @@ String.prototype.toCamelCase = function () {
             $('#' + id).html('<p>' + extra_html + '</p>');
             $('#' + extra_id).keypress(function (e) {
                 if (e.keyCode === 13) {
-                    $('#' + id).dialog('close');
+                    $('div.ui-dialog').find('button:first').trigger('click');
                 }
             });
             return $('#' + id);
@@ -61,7 +61,12 @@ String.prototype.toCamelCase = function () {
         title: 'Attention',
         modal: true,
         show: 'fade',
-        hide: 'fade'
+        hide: 'fade',
+        open: function (event, ui) {
+            $(event.target).find('input').each(function (i, el) {
+                $(this).css('width', $(el).parent().innerWidth());
+            });
+        }
     };
     $.jAlert = function (message, options) {
         options = options ? options : {};
@@ -71,12 +76,13 @@ String.prototype.toCamelCase = function () {
         options = options ? options : {};
         $.jGetHolder(message, 'input').dialog($.extend($.jDefaults, {
             title: 'Input required',
-            close: function (event, ui) {
-                console.info(event);
-            },
             buttons: {
-                'OK': function (dialog) {
+                'OK': function () {
                     $(this).dialog('close');
+                    if (options.submit) {
+                        var context = options.context ? options.context : null;
+                        options.submit($(this).find('input:first').val(), context);
+                    }
                 }
             }
         }, options));
@@ -86,7 +92,6 @@ String.prototype.toCamelCase = function () {
         $.jGetHolder(message).dialog($.extend($.jDefaults, {
             buttons: {
                 'OK': function (dialog) {
-                    console.info(dialog);
                     $(this).dialog('close');
                 },
                 Cancel: function (dialog) {
