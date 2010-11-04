@@ -33,11 +33,26 @@ $(function () {
     });
 
     window.DjangoModelMethod = Backbone.Model.extend({
-        name: '',
+        // name: '',
+        // params: ['self', '*args', '**kwargs'],
+
+        initialize: function () {
+            if (!this.get('params')) {
+                this.set({params: []});
+            }
+        },
 
         set: function (attributes, options) {
+            if (typeof attributes !== "undefined") {
+                if (typeof attributes.name === "string") {
+                    attributes.name = attributes.name.slugify();
+                    if (attributes.name === "") {
+                        throw new EmptyName();
+                    }
+                }
+            }
             return Backbone.Model.prototype.set.call(this, attributes, options);
-        }
+        },
     });
 
     window.DjangoModelMetadata = Backbone.Model.extend({
@@ -94,8 +109,10 @@ $(function () {
 
         set: function (attributes, options) {
             if (typeof attributes !== "undefined") {
-                if (typeof attributes.name !== "undefined") {
-                    attributes.name = this.sanitizeName(attributes.name);
+                if (attributes.name !== null && typeof attributes.name !== "undefined") {
+                    if (attributes.name.trim() !== '') {
+                        attributes.name = this.sanitizeName(attributes.name);
+                    }
                 }
             }
             return Backbone.Model.prototype.set.call(this, attributes, options);

@@ -33,6 +33,10 @@ String.prototype.toCamelCase = function () {
     return new_val;
 };
 
+String.prototype.slugify = function () {
+    return this.replace(/\s+/g, '_').replace(/[^\w\s\-]/g, '').toLowerCase();
+};
+
 (function ($) {
     $.jGetHolder = function (message, extra) {
         var extra_html, extra_id, html, id;
@@ -45,11 +49,11 @@ String.prototype.toCamelCase = function () {
         if (extra === 'input') {
             extra_id = id + '-input';
             extra_html += '<label for="' + extra_id + '">' + message + '</label>';
-            extra_html += '<p><input type="text" id="' + extra_id + '" name="' + extra_id + '"></p>';
+            extra_html += '<p><input type="text" id="' + extra_id + '" name="' + extra_id + '" maxlength="50"></p>';
             $('#' + id).html('<p>' + extra_html + '</p>');
             $('#' + extra_id).keypress(function (e) {
                 if (e.keyCode === 13) {
-                    $('div.ui-dialog').find('button:first').trigger('click');
+                    $('div.ui-dialog').find('button:first').focus().trigger('click');
                 }
             });
             return $('#' + id);
@@ -102,6 +106,11 @@ String.prototype.toCamelCase = function () {
     };
 })(jQuery);
 
+function emSize(size) {
+    $('body').append('<div id="emsizehelper" style="width:' + size + 'em;"></div>');
+    return $('#emsizehelper').width();
+}
+
 function modelToPython(model) {
     var code, field, field_count, method, method_count, value, x;
     code = "class " + model.get('name') + "(models.Model):\n";
@@ -120,10 +129,6 @@ function modelToPython(model) {
         code += "    pass\n";
     }
     return code;
-}
-
-function slugify(text) {
-    return text.replace(/\s+/g, '-').replace(/[^\w\s\-]/g, '').toLowerCase();
 }
 
 function destroyTheWorld() {

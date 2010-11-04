@@ -39,6 +39,11 @@ $(function () {
         message: 'Model field exists'
     });
 
+    window.DjangoModelMethodExists = Exception.extend({
+        code: 4,
+        message: 'Model method exists'
+    });
+
     window.NothingToKillError = Exception.extend({
         code: 5,
         message: 'Nothing to kill :('
