@@ -23,6 +23,7 @@
          DjangoModelView,
          emSize,
          ExceptionView,
+         getDeployCoords,
          NothingToKillError,
          window
 */
@@ -73,16 +74,17 @@ $(function () {
             return this.template(this.model.toJSON());
         },
 
-        deploy: function (element_id) {
+        deploy: function (element_id, pos) {
             var collection, fsize, holder, view, x;
             $(element_id).append(this.render());
             this.el = $('#' + this.model.id);
+            pos = pos ? pos : [this.model.get('x'), this.model.get('y')];
             this.el.draggable({handle: '.model-name'});
             // Why doesn't the template get this data directly from the object?
             this.el.css('height',   this.model.get('height'))
-                   .css('left',     this.model.get('x'))
+                   .css('left',     pos[0])
                    .css('position', 'absolute')
-                   .css('top',      this.model.get('y'))
+                   .css('top',      pos[1])
                    .css('width',    this.model.get('width'))
                    .css('z-index',  this.model.get('z'));
             // this.el.resizable({helper: 'ui-resizable-helper'});
@@ -136,13 +138,15 @@ $(function () {
             'dblclick .field': 'editField',
             'focus .new-field': 'focusNewField',
             'keypress .new-field': 'createField',
+            'sortupdate .model-fields': 'saveFieldPosition',
 
             // Methods
             'blur .new-method': 'blurNewMethod',
             'click .method-kill': 'destroyMethod',
             'dblclick .method': 'editMethod',
             'focus .new-method': 'focusNewMethod',
-            'keypress .new-method': 'createMethod'
+            'keypress .new-method': 'createMethod',
+            'sortupdate .model-methods': 'saveMethodPosition'
 
         },
 
@@ -254,9 +258,15 @@ $(function () {
                 return false;
             }
             try {
-                // TODO: Chequear si existe algún modelo posicionado en 0x0,
-                // si existe sumarle 18px a x e y.
-                model = DjangoModels.create({name: obj});
+                coords = getDeployCoords();
+                // Send 'position' to the Collection.create() method.
+                model = DjangoModels.create({
+                    name: obj,
+                    position: DjangoModels.nextPosition(),
+                    x: coords[0],
+                    y: coords[1],
+                    z: DjangoModels.length
+                });
             } catch (err) {
                 this.report(err);
                 return false;
@@ -271,13 +281,33 @@ $(function () {
 
         raiseModel: function (e) {
             var model, model_id, z;
-            if (DjangoModels.size() === 1) {
+            if (DjangoModels.length === 1) {
                 return true;
             }
+            /* This doesn't work and I don't know why.
+            if ($(e.target).hasClass('model')) {
+                model_dom = $(e.target);
+            } else {
+                // TODO: When clicking a input field very fast model doesn't rise.
+                model_dom = $(e.target).closest('.model');
+            }
+            // $('#workspace').append(model_dom.remove());
+            model_dom.remove();
+            $('#workspace').children('.model').each(function (i, el) {
+                model = DjangoModels.get($(el).attr('id'));
+                model.set({position: i + 1, z: i + 1});
+                model.save();
+                view = DjangoModelView({model: model});
+                view.deploy(this.holder);
+                // $('#' + el.id).css('z-index', i + 1);
+                // App.render();
+            });
+            $(e.target).focus();
+            */
             if ($(e.target).hasClass('model')) {
                 model_id = e.target.id;
             } else {
-                model_id = $(e.target).parent().attr('id');
+                model_id = $(e.target).closest('.model').attr('id');
             }
             if (e) {
                 model = DjangoModels.get(model_id);
@@ -335,7 +365,6 @@ $(function () {
 
         // Field
         createField: function (e) {
-            // TODO: Terminar esto.
             var field, fields, model, params, view;
             if (e.keyCode !== 13) {
                 return true;
@@ -343,7 +372,10 @@ $(function () {
             try {
                 model = DjangoModels.get($(e.target).parent().attr('id'));
                 fields = model.get('fields');
-                params = {name: e.target.value};
+                params = {
+                    name: e.target.value,
+                    position: fields.nextPosition()
+                };
                 field = fields.create(params);
             } catch (err) {
                 this.report(err);
@@ -361,6 +393,17 @@ $(function () {
         editField: function (e) {
             $.jAlert(e);
             return false;
+        },
+
+        saveFieldPosition: function (e) {
+            var field, fields;
+            fields = DjangoModels.get($(e.target).closest('.model').attr('id')).get('fields');
+            $(e.target).closest('.model-fields').children('.field').each(function (i, el) {
+                field = fields.get($(el).attr('id'));
+                field.set({position: i + 1});
+                field.save();
+            });
+            return true;
         },
 
         destroyField: function (e) {
@@ -409,7 +452,10 @@ $(function () {
             try {
                 model = DjangoModels.get(model_id);
                 methods = model.get('methods');
-                method = methods.create({name: e.target.value});
+                method = methods.create({
+                    name: e.target.value,
+                    position: methods.nextPosition()
+                });
             } catch (err) {
                 this.report(err);
                 return false;
@@ -426,6 +472,17 @@ $(function () {
         editMethod: function (e) {
             $.jAlert(e);
             return false;
+        },
+
+        saveMethodPosition: function (e) {
+            var method, methods;
+            methods = DjangoModels.get($(e.target).closest('.model').attr('id')).get('methods');
+            $(e.target).closest('.model-methods').children('.method').each(function (i, el) {
+                method = methods.get($(el).attr('id'));
+                method.set({position: i + 1});
+                method.save();
+            });
+            return true;
         },
 
         destroyMethod: function (e) {

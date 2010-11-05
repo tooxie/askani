@@ -23,13 +23,16 @@
 
 $(function () {
     window.DjangoModelField = Backbone.Model.extend({
-        name: '',
-
+        // name: '',
         type: 'CharField',
+        position: 1,
 
         initialize: function () {
             if (!this.get('type')) {
                 this.set({type: this.type});
+            }
+            if (!this.get('position')) {
+                this.set({position: this.position});
             }
         },
 
@@ -41,10 +44,14 @@ $(function () {
     window.DjangoModelMethod = Backbone.Model.extend({
         // name: '',
         params: ['self'],
+        position: 1,
 
         initialize: function () {
             if (!this.get('params')) {
                 this.set({params: this.params});
+            }
+            if (!this.get('position')) {
+                this.set({position: this.position});
             }
         },
 
@@ -73,9 +80,10 @@ $(function () {
             defaults = {
                 metadata: new DjangoModelMetadata(),
                 name: '',
+                position: 1,
                 x: 0,
                 y: 0,
-                z: 0
+                z: 1
             };
             for (key in defaults) {
                 if (!this.get(key)) {

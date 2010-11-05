@@ -66,6 +66,7 @@ String.prototype.slugify = function () {
         modal: true,
         show: 'fade',
         hide: 'fade',
+        resizable: false,
         open: function (event, ui) {
             $(event.target).find('input').each(function (i, el) {
                 $(this).css('width', $(el).parent().innerWidth());
@@ -148,4 +149,18 @@ function destroyTheWorld() {
         DjangoModels.at(0).destroy();
     }
     App.render();
+}
+
+function getDeployCoords(x, y) {
+    var l, i;
+    x = x ? x : 0;
+    y = y ? y : 0;
+    l = DjangoModels.length;
+    for (i = 0; i < l; i += 1) {
+        m = DjangoModels.at(i);
+        if (m.get('x') === x && m.get('y') === y) {
+            [x, y] = getDeployCoords(x + 9, y + 18);
+        }
+    }
+    return [x, y];
 }

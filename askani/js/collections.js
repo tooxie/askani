@@ -38,10 +38,6 @@ $(function () {
             }
         },
 
-        comparator: function (model) {
-            return model.get('order');
-        },
-
         create: function (attributes, options) {
             var x;
             if (attributes.name === null) {
@@ -57,6 +53,17 @@ $(function () {
                 }
             }
             return Backbone.Collection.prototype.create.call(this, new DjangoModelField(attributes), options);
+        },
+
+        nextPosition: function() {
+          if (!this.length) {
+              return 1;
+          }
+          return this.last().get('position') + 1;
+        },
+
+        comparator: function(field) {
+          return field.get('position');
         }
     });
 
@@ -69,10 +76,6 @@ $(function () {
                     this.localStorage = new Store('met-' + attributes.namespace);
                 }
             }
-        },
-
-        comparator: function (model) {
-            return model.get('order');
         },
 
         create: function (attributes, options) {
@@ -90,6 +93,17 @@ $(function () {
                 }
             }
             return Backbone.Collection.prototype.create.call(this, new DjangoModelMethod(attributes), options);
+        },
+
+        nextPosition: function() {
+          if (!this.length) {
+              return 1;
+          }
+          return this.last().get('position') + 1;
+        },
+
+        comparator: function(method) {
+          return method.get('position');
         }
     });
 
@@ -97,10 +111,6 @@ $(function () {
         model: DjangoModel,
 
         localStorage: new Store("djangomodels"),
-
-        comparator: function (model) {
-            return model.get('order');
-        },
 
         create: function (attributes, options) {
             var l = this.length, x;
@@ -120,6 +130,17 @@ $(function () {
             return Backbone.Collection.prototype.create.call(this, attributes, $.extend({
                 success: this.model.prototype.post_save
             }, options));
+        },
+
+        nextPosition: function() {
+          if (!this.length) {
+              return 1;
+          }
+          return this.last().get('position') + 1;
+        },
+
+        comparator: function(model) {
+          return model.get('position');
         }
     });
     window.DjangoModels = new DjangoModelList();
