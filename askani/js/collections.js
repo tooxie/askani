@@ -55,15 +55,15 @@ $(function () {
             return Backbone.Collection.prototype.create.call(this, new DjangoModelField(attributes), options);
         },
 
-        nextPosition: function() {
-          if (!this.length) {
-              return 1;
-          }
-          return this.last().get('position') + 1;
+        nextPosition: function () {
+            if (!this.length) {
+                return 1;
+            }
+            return this.last().get('position') + 1;
         },
 
-        comparator: function(field) {
-          return field.get('position');
+        comparator: function (field) {
+            return field.get('position');
         }
     });
 
@@ -95,15 +95,15 @@ $(function () {
             return Backbone.Collection.prototype.create.call(this, new DjangoModelMethod(attributes), options);
         },
 
-        nextPosition: function() {
-          if (!this.length) {
-              return 1;
-          }
-          return this.last().get('position') + 1;
+        nextPosition: function () {
+            if (!this.length) {
+                return 1;
+            }
+            return this.last().get('position') + 1;
         },
 
-        comparator: function(method) {
-          return method.get('position');
+        comparator: function (method) {
+            return method.get('position');
         }
     });
 
@@ -132,15 +132,15 @@ $(function () {
             }, options));
         },
 
-        nextPosition: function() {
-          if (!this.length) {
-              return 1;
-          }
-          return this.last().get('position') + 1;
+        nextPosition: function () {
+            if (!this.length) {
+                return 1;
+            }
+            return this.last().get('position') + 1;
         },
 
-        comparator: function(model) {
-          return model.get('position');
+        comparator: function (model) {
+            return model.get('position');
         }
     });
     window.DjangoModels = new DjangoModelList();

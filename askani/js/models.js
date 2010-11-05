@@ -145,7 +145,8 @@ $(function () {
             y = (typeof y === "string") ? Number(y.replace(/[px]/g, '')) : y;
             this.set({
                 x: (x > 0) ? x : 0,
-                y: (y > 0) ? y : 0});
+                y: (y > 0) ? y : 0
+            });
         },
 
         isEqual: function (model) {

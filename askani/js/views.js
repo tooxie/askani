@@ -250,7 +250,7 @@ $(function () {
 
         // Model
         createModel: function (obj) {
-            var model, view;
+            var coords, model, view;
             if (typeof obj !== 'string') {
                 $.jPrompt('Model name:', {submit: function (name) {
                     App.createModel(name);
