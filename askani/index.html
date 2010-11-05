@@ -3,9 +3,9 @@
 <html>
     <head>
         <title>Askani Code Generator</title>
-        <script type="text/javascript" src="js/json2-min.js"></script>
         <script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.5.custom.min.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
+        <script type="text/javascript" src="js/json2-min.js"></script>
         <script type="text/javascript" src="js/underscore-1.1.0-min.js"></script>
         <script type="text/javascript" src="js/backbone-min.js"></script>
         <script type="text/javascript" src="js/backbone-localstorage-min.js"></script>
@@ -14,8 +14,8 @@
         <script type="text/javascript" src="js/models.js"></script>
         <script type="text/javascript" src="js/collections.js"></script>
         <script type="text/javascript" src="js/views.js"></script>
-        <link type="text/css" href="css/ui-lightness/jquery-ui-1.8.5.custom.css" rel="Stylesheet" />
-        <link type="text/css" href="css/base.css" rel="Stylesheet" />
+        <link type="text/css" href="css/redmond/jquery-ui-1.8.6.custom.css" rel="stylesheet">
+        <link type="text/css" href="css/base.css" rel="stylesheet">
     </head>
     <body>
         <!-- Toolbar -->
@@ -44,14 +44,14 @@
 
         <!-- Templates -->
         <script type="text/template" id="model-template">
-            <div class="model ui-draggable" id="<%= id %>" style="position:relative; left:<%= x %>; top:<%= y %>;">
+            <div class="model ui-draggable" id="<%= id %>" style="position:absolute;left:<%= x %>;top:<%= y %>;z-index:<%= z %>;">
                 <div class="model-name">
                     <%= name %>
                     <a href="#" class="model-kill"></a>
                 </div>
-                <input type="text" class="new-field" name="attr-<%= id %>">
+                <input type="text" class="new-field blur" name="attr-<%= id %>" value="New field" maxlength="50">
                 <div class="model-fields"></div>
-                <input type="text" class="new-method" id="meth-<%= id %>">
+                <input type="text" class="new-method blur" id="meth-<%= id %>" value="New method" maxlength="50">
                 <div class="model-methods"></div>
                 <div class="model-footer"></div>
             </div>
@@ -59,15 +59,15 @@
 
         <script type="text/template" id="model-field-template">
             <div class="field" id="<%= id %>">
+                <span class="type"><%= type %></span>
                 <span class="name"><%= name %></span>
-                <span class="value"><%= value %></span>
                 <a href="#" class="kill field-kill"></a>
             </div>
         </script>
 
         <script type="text/template" id="model-method-template">
             <div class="method" id="<%= id %>">
-                <span class="name"><%= name %>(<% if (params) { %><%= params %><% } %>)</span>
+                <span class="name"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
                 <a href="#" class="kill method-kill"></a>
             </div>
         </script>
