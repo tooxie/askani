@@ -25,7 +25,13 @@ $(function () {
     window.DjangoModelField = Backbone.Model.extend({
         name: '',
 
-        value: '',
+        type: 'CharField',
+
+        initialize: function () {
+            if (!this.get('type')) {
+                this.set({type: this.type});
+            }
+        },
 
         set: function (attributes, options) {
             return Backbone.Model.prototype.set.call(this, attributes, options);
@@ -34,25 +40,25 @@ $(function () {
 
     window.DjangoModelMethod = Backbone.Model.extend({
         // name: '',
-        // params: ['self', '*args', '**kwargs'],
+        params: ['self'],
 
         initialize: function () {
             if (!this.get('params')) {
-                this.set({params: []});
+                this.set({params: this.params});
             }
         },
 
         set: function (attributes, options) {
-            if (typeof attributes !== "undefined") {
-                if (typeof attributes.name === "string") {
+            if (typeof attributes !== 'undefined') {
+                if (typeof attributes.name === 'string') {
                     attributes.name = attributes.name.slugify();
-                    if (attributes.name === "") {
+                    if (attributes.name === '') {
                         throw new EmptyName();
                     }
                 }
             }
             return Backbone.Model.prototype.set.call(this, attributes, options);
-        },
+        }
     });
 
     window.DjangoModelMetadata = Backbone.Model.extend({
@@ -62,11 +68,11 @@ $(function () {
     });
 
     window.DjangoModel = Backbone.Model.extend({
-        initialize: function (attributes) {
+        initialize: function () {
             var args, defaults, key;
             defaults = {
-                name: '',
                 metadata: new DjangoModelMetadata(),
+                name: '',
                 x: 0,
                 y: 0,
                 z: 0
@@ -108,8 +114,8 @@ $(function () {
         },
 
         set: function (attributes, options) {
-            if (typeof attributes !== "undefined") {
-                if (attributes.name !== null && typeof attributes.name !== "undefined") {
+            if (typeof attributes !== 'undefined') {
+                if (attributes.name !== null && typeof attributes.name !== 'undefined') {
                     if (attributes.name.trim() !== '') {
                         attributes.name = this.sanitizeName(attributes.name);
                     }
@@ -127,9 +133,11 @@ $(function () {
         },
 
         setPosition: function (x, y) {
-            x = Number(x.replace(/[px]/g, ''));
-            y = Number(y.replace(/[px]/g, ''));
-            this.set({x: (x > 0) ? x : 0, y: (y > 0) ? y : 0});
+            x = (typeof x === "string") ? Number(x.replace(/[px]/g, '')) : x;
+            y = (typeof y === "string") ? Number(y.replace(/[px]/g, '')) : y;
+            this.set({
+                x: (x > 0) ? x : 0,
+                y: (y > 0) ? y : 0});
         },
 
         isEqual: function (model) {

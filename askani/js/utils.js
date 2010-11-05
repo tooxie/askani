@@ -18,7 +18,7 @@
          jQuery
  */
 String.prototype.toCamelCase = function () {
-    var bits, new_val = "", x;
+    var bits, new_val = '', x;
 
     if (this.indexOf(' ') === -1) {
         return this.substr(0, 1).toUpperCase() + this.substr(1);
@@ -74,14 +74,20 @@ String.prototype.slugify = function () {
     };
     $.jAlert = function (message, options) {
         options = options ? options : {};
-        $.jGetHolder(message).dialog($.extend($.jDefaults, options));
+        $.jGetHolder(message).dialog($.extend($.jDefaults, {
+            buttons: {
+                Close: function () {
+                    $(this).dialog('close');
+                }
+            }
+        }, options));
     };
     $.jPrompt = function (message, options) {
         options = options ? options : {};
         $.jGetHolder(message, 'input').dialog($.extend($.jDefaults, {
             title: 'Input required',
             buttons: {
-                'OK': function () {
+                OK: function () {
                     $(this).dialog('close');
                     if (options.submit) {
                         var context = options.context ? options.context : null;
@@ -95,10 +101,14 @@ String.prototype.slugify = function () {
         options = options ? options : {};
         $.jGetHolder(message).dialog($.extend($.jDefaults, {
             buttons: {
-                'OK': function (dialog) {
+                Yes: function () {
                     $(this).dialog('close');
+                    if (options.submit) {
+                        var context = options.context ? options.context : null;
+                        options.submit(context);
+                    }
                 },
-                Cancel: function (dialog) {
+                No: function () {
                     $(this).dialog('close');
                 }
             }
@@ -112,21 +122,21 @@ function emSize(size) {
 }
 
 function modelToPython(model) {
-    var code, field, field_count, method, method_count, value, x;
-    code = "class " + model.get('name') + "(models.Model):\n";
+    var code, field, field_count, method, method_count, type, x;
+    code = 'class ' + model.get('name') + '(models.Model):\n';
     field_count = model.get('fields').size();
     for (x = 0; x < field_count; x += 1) {
         field = model.get('fields').at(x);
-        value = field.get('value');
-        code += "    " + field.get('name') + " = " + (value ? "models." + value + "()" : 'None') + "\n";
+        type = field.get('type');
+        code += '    ' + field.get('name') + ' = ' + (type ? 'models.' + type + '()' : 'None') + '\n';
     }
     method_count = model.get('methods').size();
     for (x = 0; x < method_count; x += 1) {
         method = model.get('methods').at(x);
-        code += "\n    def " + method.get('name') + "(self):" + "\n        pass\n";
+        code += '\n    def ' + method.get('name') + '(' + method.params.join(', ') + '):' + '\n        pass\n';
     }
     if (field_count === 0 && method_count === 0) {
-        code += "    pass\n";
+        code += '    pass\n';
     }
     return code;
 }

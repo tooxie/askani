@@ -17,9 +17,11 @@ a:hover {
     color:black;
 }
 #toolbar {
+    background-color:white;
     list-style-type:none;
     margin:0;
-    padding:0;
+    opacity:0.6;
+    padding:0.5em 1em;
 }
 #toolbar li {
     display:inline;
@@ -30,15 +32,18 @@ a:hover {
     visibility:hidden;
 }
 .ui-state-error, .ui-state-highlight {
-    margin:.7em;
-    padding:0 .7em;
+    margin:0.7em;
+    padding:0 0.7em;
 }
 .ui-state-highlight {
     margin-top:20px;
 }
 .ui-icon-alert, .ui-icon-info {
     float:left;
-    margin-right:.3em;
+    margin-right:0.3em;
+}
+.model .ui-icon {
+    background:none;
 }
 .ui-draggable {
     border:1px solid gray;
@@ -47,20 +52,18 @@ a:hover {
     border:1px solid #5488BB;
 }
 .model {
-    border-radius:5px;
     -moz-border-radius:5px;
     background-color:white;
-    cursor:move;
+    border-radius:5px;
     float:left;
     margin:2.5em 0 0 20px;
-    min-height:150px;
-    min-width:150px;
+    min-height:180px;
+    min-width:180px;
     padding-bottom:1em;
+    text-align:center;
 }
 .model-footer {
-    /* TODO: crop background image */
-    background-image:url('ui-lightness/images/ui-icons_222222_256x240.png');
-    background-position:-80px -224px;
+    background-image:url('../img/socket.png');
     bottom:3px;
     height:14px;
     position:absolute;
@@ -68,13 +71,13 @@ a:hover {
     width:14px;
 }
 .model-name {
-    border-radius:5px 5px 0 0;
     -moz-border-radius:5px 5px 0 0;
-    border-bottom:1px solid gray;
-    padding-left:1em;
-    text-align:center;
     background:#E8E7E7 url('../img/model_name-bg.png') 0 0 repeat-x;
+    border-bottom:1px solid gray;
+    border-radius:5px 5px 0 0;
+    cursor:move;
     height:17px;
+    padding-left:1em;
 }
 .model-name .model-kill {
     float:right;
@@ -83,34 +86,48 @@ a:hover {
     width:17px;
     height:17px;
 }
+.field .type, .field .name {
+    float:left;
+    margin-right:1em;
+}
 .field, .method {
     padding:0 3px;
+    overflow:auto;
+    cursor:move;
+}
+.method .name {
+    margin-right:1em;
+    float:left;
 }
 .field:hover, .method:hover {
     background-color:#EEE;
 }
 .model .kill {
     float:right;
-    background:transparent url('../img/kill-child.png') 0 0 no-repeat;
+    background:transparent url('../img/kill-child.png') 50% 50% no-repeat;
     display:block;
     width:12px;
-    height:12px;
+    height:1.6em;
+    margin:1px 0;
 }
 .model .kill:hover {
-    background:transparent url('../img/kill-child-hover.png') 0 0 no-repeat;
+    background:transparent url('../img/kill-child-hover.png') 50% 50% no-repeat;
 }
 .model-name .model-kill:hover {
     background-position: 0 -17px;
 }
 .model-fields, .model-methods {
-    font-size:.9em;
-    padding:0 .5em;
+    font-size:0.9em;
+    text-align:left;
+    padding:0 0.5em 0.5em;
 }
 .model-fields {
     border-bottom:1px solid gray;
+    margin-bottom:0.5em;
+    min-height:33px;
 }
 .model input {
-    margin:.5em 1em;
+    margin:0.5em 1em;
 }
 .ui-sortable-helper .kill, .ui-sortable-helper:hover .kill {
     display:none;
@@ -118,6 +135,11 @@ a:hover {
 .ui-sortable-helper, .ui-sortable-helper:hover {
     background-color:transparent;
 }
+/*
+.ui-resizable-helper {
+    border:1px dashed gray;
+}
+*/
 .ui-sortable-placeholder {
     border:1px dashed black;
     height:1.4em;
@@ -131,4 +153,10 @@ a:hover {
 #code {
     height:325px;
     width:625px;
+}
+.blur {
+    color:gray;
+}
+.focus {
+    color:black;
 }

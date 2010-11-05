@@ -51,7 +51,7 @@ $(function () {
 
     window.ExceptionView = Backbone.View.extend({
 
-        tagName: "div",
+        tagName: 'div',
 
         template: _.template($('#error-template').html()),
 
@@ -62,7 +62,7 @@ $(function () {
 
     window.WarningView = Backbone.View.extend({
 
-        tagName: "div",
+        tagName: 'div',
 
         template: _.template($('#warning-template').html()),
 

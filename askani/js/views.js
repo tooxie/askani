@@ -17,7 +17,6 @@
          App,
          AppView,
          Backbone,
-         confirm,
          DjangoModelFieldView,
          DjangoModelMethodView,
          DjangoModels,
@@ -25,15 +24,14 @@
          emSize,
          ExceptionView,
          NothingToKillError,
-         prompt,
          window
 */
 
 $(function () {
     window.DjangoModelMethodView = Backbone.View.extend({
-        tagName: "div",
+        tagName: 'div',
 
-        className: "method",
+        className: 'method',
 
         template: _.template($('#model-method-template').html()),
 
@@ -48,9 +46,9 @@ $(function () {
     });
 
     window.DjangoModelFieldView = Backbone.View.extend({
-        tagName: "div",
+        tagName: 'div',
 
-        className: "field",
+        className: 'field',
 
         template: _.template($('#model-field-template').html()),
 
@@ -65,9 +63,9 @@ $(function () {
     });
 
     window.DjangoModelView = Backbone.View.extend({
-        tagName: "div",
+        tagName: 'div',
 
-        className: "model",
+        className: 'model',
 
         template: _.template($('#model-template').html()),
 
@@ -79,7 +77,15 @@ $(function () {
             var collection, fsize, holder, view, x;
             $(element_id).append(this.render());
             this.el = $('#' + this.model.id);
-            this.el.draggable().css('position', 'absolute').css('left', this.model.get('x')).css('top', this.model.get('y')).css('z-index', this.model.get('z'));
+            this.el.draggable({handle: '.model-name'});
+            // Why doesn't the template get this data directly from the object?
+            this.el.css('height',   this.model.get('height'))
+                   .css('left',     this.model.get('x'))
+                   .css('position', 'absolute')
+                   .css('top',      this.model.get('y'))
+                   .css('width',    this.model.get('width'))
+                   .css('z-index',  this.model.get('z'));
+            // this.el.resizable({helper: 'ui-resizable-helper'});
             this.el.find('.new-attribute').keypress(function (e) {
                 if (e.keyCode === 13) {
                     App.requestAttributeDetails(e.target.id.substr(5));
@@ -113,32 +119,36 @@ $(function () {
 
         events: {
             // Toolbar
-            "click #to-python": "toPython",
-            "click #to-json": "toJSON",
-            "click #kill-all": "destroyTheWorld",
-            "click #output-close": "closeOutput",
+            'click #to-python': 'toPython',
+            'click #to-json': 'toJSON',
+            'click #kill-all': 'destroyTheWorld',
 
             // Models
-            "click #new-model": "newModel",
-            "click .model": "raiseModel",
-            "click .model-kill": "destroyModel",
-            "dblclick .model": "promptNewModelName",
-            "dragstop .model": "saveModelCoords",
+            'click #new-model': 'createModel',
+            'click .model': 'raiseModel',
+            'click .model-kill': 'destroyModel',
+            'dblclick .model-name': 'promptModelNewName',
+            'dragstop .model': 'saveModelCoords',
 
             // Fields
-            "click .new-field": "newField",
-            "click .field-kill": "destroyField",
+            'blur .new-field': 'blurNewField',
+            'click .field-kill': 'destroyField',
+            'dblclick .field': 'editField',
+            'focus .new-field': 'focusNewField',
+            'keypress .new-field': 'createField',
 
             // Methods
-            // "click .new-method": "newMethod",
-            "keypress .new-method": "createMethod",
-            "click .method-kill": "destroyMethod"
+            'blur .new-method': 'blurNewMethod',
+            'click .method-kill': 'destroyMethod',
+            'dblclick .method': 'editMethod',
+            'focus .new-method': 'focusNewMethod',
+            'keypress .new-method': 'createMethod'
 
         },
 
         initialize: function () {
             var sortable_args;
-            _.bindAll(this, 'newModel', 'newField', 'newMethod', 'render');
+            _.bindAll(this, 'createModel', 'createField', 'createMethod', 'destroyMethod', 'render');
             // DjangoModels.bind('add', this.addOne);
             // DjangoModels.bind('refresh', this.addAll);
             // DjangoModels.bind('all', this.render);
@@ -183,13 +193,13 @@ $(function () {
 
         toPython: function (e) {
             var code, dj_count, x;
-            code = "# -*- coding: utf-8 -*-\nfrom django.db import models\n";
+            code = '# -*- coding: utf-8 -*-\nfrom django.db import models\n';
             dj_count = DjangoModels.size();
             if (dj_count === 0) {
-                code += "\n# Create your models here.";
+                code += '\n# Create your models here.';
             } else {
                 for (x = 0; x < dj_count; x += 1) {
-                    code += "\n\n" + DjangoModels.at(x).toPython();
+                    code += '\n\n' + DjangoModels.at(x).toPython();
                 }
             }
             this.output(code);
@@ -224,33 +234,28 @@ $(function () {
                 this.report(new NothingToKillError());
                 return false;
             }
-            if (!confirm('Destroy the world?')) {
-                return false;
-            } else if (!confirm('Are you really really sure?')) {
-                return false;
-            }
-            for (x = 0; x < models_count; x += 1) {
-                DjangoModels.at(0).destroy();
-            }
-            this.render();
-            return false;
-        },
-
-        closeOutput: function (e) {
-            $(e.target).closest('#output').fadeOut();
+            $.jConfirm('Kill them all?', {submit: function () {
+                models_count = DjangoModels.length;
+                for (x = 0; x < models_count; x += 1) {
+                    DjangoModels.at(0).destroy();
+                }
+                App.render();
+            }});
             return false;
         },
 
         // Model
-        newModel: function (obj) {
+        createModel: function (obj) {
             var model, view;
-            if (typeof obj !== "string") {
+            if (typeof obj !== 'string') {
                 $.jPrompt('Model name:', {submit: function (name) {
-                    App.newModel(name);
+                    App.createModel(name);
                 }});
                 return false;
             }
             try {
+                // TODO: Chequear si existe algún modelo posicionado en 0x0,
+                // si existe sumarle 18px a x e y.
                 model = DjangoModels.create({name: obj});
             } catch (err) {
                 this.report(err);
@@ -265,23 +270,31 @@ $(function () {
         },
 
         raiseModel: function (e) {
+            var model, model_id, z;
             if (DjangoModels.size() === 1) {
                 return true;
             }
+            if ($(e.target).hasClass('model')) {
+                model_id = e.target.id;
+            } else {
+                model_id = $(e.target).parent().attr('id');
+            }
             if (e) {
-                var model = DjangoModels.get(e.target.id);
+                model = DjangoModels.get(model_id);
                 DjangoModels.remove(model, {silent: true});
                 DjangoModels.add(model, {silent: true});
             }
             DjangoModels.each(function (el, i) {
-                var z = DjangoModels.size() - i;
-                $('#' + el.id).css('z-index', z);
-                el.set({z: z});
-                el.save();
+                if (el.id) {
+                    z = DjangoModels.size() - i;
+                    $('#' + el.id).css('z-index', z);
+                    el.set({z: z});
+                    el.save();
+                }
             });
         },
 
-        promptNewModelName: function (e) {
+        promptModelNewName: function (e) {
             $.jPrompt('New name:', {submit: function (name, context) {
                 App.changeModelName(name, context);
             }, context: e});
@@ -301,11 +314,13 @@ $(function () {
         },
 
         destroyModel: function (e) {
-            var model = DjangoModels.get($(e.target).parent().parent().attr('id'));
-            if (confirm('Delete model ' + model.get('name') + '?')) {
+            var model;
+            model = DjangoModels.get($(e.target).parent().parent().attr('id'));
+            $.jConfirm('Delete model ' + model.get('name') + '?', {submit: function (model) {
                 model.destroy();
-                this.render();
-            }
+                DjangoModels.remove(model);
+                App.render();
+            }, context: model});
             return false;
         },
 
@@ -319,17 +334,16 @@ $(function () {
         },
 
         // Field
-        newField: function (obj) {
+        createField: function (e) {
             // TODO: Terminar esto.
             var field, fields, model, params, view;
-            $.jPrompt('Method name:', {submit: function (name, context) {
-                App.createMethod(name, context);
-            }});
-            return false;
+            if (e.keyCode !== 13) {
+                return true;
+            }
             try {
-                model = DjangoModels.get($(e.target).closest('.model').attr('id'));
+                model = DjangoModels.get($(e.target).parent().attr('id'));
                 fields = model.get('fields');
-                params = {name: prompt('Field name'), value: prompt('Field value')};
+                params = {name: e.target.value};
                 field = fields.create(params);
             } catch (err) {
                 this.report(err);
@@ -339,20 +353,46 @@ $(function () {
                 return false;
             }
             view = new DjangoModelFieldView({model: field});
-            view.deploy($(e.target).parent().parent().children('.model-fields'));
+            view.deploy($(e.target).parent().children('.model-fields'));
+            e.target.value = '';
+            return false;
+        },
+
+        editField: function (e) {
+            $.jAlert(e);
             return false;
         },
 
         destroyField: function (e) {
-            var field = DjangoModels.get($(e.target).closest('.model').attr('id')).get('fields').get($(e.target).closest('.field').attr('id'));
-            if (confirm('Delete field ' + field.get('name') + '?')) {
-                field.destroy();
-                this.render();
+            var field, fields;
+            fields = DjangoModels.get($(e.target).closest('.model').attr('id')).get('fields');
+            field = fields.get($(e.target).closest('.field').attr('id'));
+            $.jConfirm('Delete field ' + field.get('name') + '?', {submit: function (params) {
+                params.field.destroy();
+                params.fields.remove(params.field);
+                App.render();
+            }, context: {field: field, fields: fields}});
+            return false;
+        },
+
+        focusNewField: function (e) {
+            if (e.target.value === 'New field') {
+                e.target.value = '';
+                $(e.target).removeClass('blur');
+                $(e.target).addClass('focus');
+            }
+        },
+
+        blurNewField: function (e) {
+            if (e.target.value === '') {
+                e.target.value = 'New field';
+                $(e.target).addClass('blur');
+                $(e.target).removeClass('focus');
             }
         },
 
         // Method
-        requestMethodParams: function(method_name, model_id) {
+        requestMethodParams: function (method_name, model_id) {
             $.jPrompt("Method parameters (don't include self)", {submit: function (name, context) {
                 App.createMethod(name, context);
             }, context: {method_name: method_name, model_id: model_id}});
@@ -383,13 +423,36 @@ $(function () {
             return false;
         },
 
+        editMethod: function (e) {
+            $.jAlert(e);
+            return false;
+        },
+
         destroyMethod: function (e) {
-            var method, model;
-            model = DjangoModels.get($(e.target).closest('.model').attr('id'));
-            method = model.get('methods').get($(e.target).closest('.method').attr('id'));
-            if (confirm('Delete method ' + method.get('name') + '()?')) {
-                method.destroy();
-                this.render();
+            var method, methods;
+            methods = DjangoModels.get($(e.target).closest('.model').attr('id')).get('methods');
+            method = methods.get($(e.target).closest('.method').attr('id'));
+            $.jConfirm('Delete method ' + method.get('name') + '()?', {submit: function (params) {
+                params.method.destroy();
+                params.methods.remove(params.method);
+                App.render();
+            }, context: {method: method, methods: methods}});
+            return false;
+        },
+
+        focusNewMethod: function (e) {
+            if (e.target.value === 'New method') {
+                e.target.value = '';
+                $(e.target).removeClass('blur');
+                $(e.target).addClass('focus');
+            }
+        },
+
+        blurNewMethod: function (e) {
+            if (e.target.value === '') {
+                e.target.value = 'New method';
+                $(e.target).addClass('blur');
+                $(e.target).removeClass('focus');
             }
         }
     });
