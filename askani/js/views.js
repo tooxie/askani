@@ -259,13 +259,10 @@ $(function () {
             }
             try {
                 coords = getDeployCoords();
-                // Send 'position' to the Collection.create() method.
                 model = DjangoModels.create({
                     name: obj,
-                    position: DjangoModels.nextPosition(),
                     x: coords[0],
-                    y: coords[1],
-                    z: DjangoModels.length
+                    y: coords[1]
                 });
             } catch (err) {
                 this.report(err);
@@ -280,7 +277,7 @@ $(function () {
         },
 
         raiseModel: function (e) {
-            var model, model_id, z;
+            var model, model_dom, model_id, z;
             if (DjangoModels.length === 1) {
                 return true;
             }
@@ -305,23 +302,36 @@ $(function () {
             $(e.target).focus();
             */
             if ($(e.target).hasClass('model')) {
-                model_id = e.target.id;
+                model_dom = $(e.target);
+                model_id = model_dom.attr('id');
             } else {
-                model_id = $(e.target).closest('.model').attr('id');
+                model_dom = $(e.target).closest('.model');
+                model_id = model_dom.attr('id');
             }
-            if (e) {
-                model = DjangoModels.get(model_id);
-                DjangoModels.remove(model, {silent: true});
-                DjangoModels.add(model, {silent: true});
+            if (Number(model_dom.css('z-index')) === DjangoModels.size()) {
+                return true;
             }
-            DjangoModels.each(function (el, i) {
+            model = DjangoModels.get(model_id);
+            // DjangoModels.remove(model, {silent: true});
+            // DjangoModels.add(model, {silent: true});
+            DjangoModels.each(function (el, i, list) {
+                // For some reason I receive a ghost object sometimes.
                 if (el.id) {
-                    z = DjangoModels.size() - i;
-                    $('#' + el.id).css('z-index', z);
-                    el.set({z: z});
-                    el.save();
+                    // I substract one from every z higher than the model I'm
+                    // rising, that way I know that when I assign it the highest
+                    // value no other model will have it.
+                    if (el.get('z') > model.get('z')) {
+                        el.set({z: el.get('z') - 1});
+                        el.save();
+                        $('#' + el.id).css('z-index', el.get('z'));
+                    }
                 }
             });
+            model.set({z: DjangoModels.length});
+            model.save();
+            model_dom.css('z-index', model.get('z'));
+            // this.render();
+            $(e.target).blur().focus();
         },
 
         promptModelNewName: function (e) {
@@ -373,8 +383,7 @@ $(function () {
                 model = DjangoModels.get($(e.target).parent().attr('id'));
                 fields = model.get('fields');
                 params = {
-                    name: e.target.value,
-                    position: fields.nextPosition()
+                    name: e.target.value
                 };
                 field = fields.create(params);
             } catch (err) {
@@ -453,8 +462,7 @@ $(function () {
                 model = DjangoModels.get(model_id);
                 methods = model.get('methods');
                 method = methods.create({
-                    name: e.target.value,
-                    position: methods.nextPosition()
+                    name: e.target.value
                 });
             } catch (err) {
                 this.report(err);

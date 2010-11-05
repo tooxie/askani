@@ -52,7 +52,9 @@ $(function () {
                     throw new DjangoModelFieldExists(attributes);
                 }
             }
-            return Backbone.Collection.prototype.create.call(this, new DjangoModelField(attributes), options);
+            return Backbone.Collection.prototype.create.call(this, $.extend({
+                position: this.nextPosition()
+            }, attributes), options);
         },
 
         nextPosition: function () {
@@ -92,7 +94,9 @@ $(function () {
                     throw new DjangoModelMethodExists(attributes);
                 }
             }
-            return Backbone.Collection.prototype.create.call(this, new DjangoModelMethod(attributes), options);
+            return Backbone.Collection.prototype.create.call(this, $.extend({
+                position: this.nextPosition()
+            }, attributes), options);
         },
 
         nextPosition: function () {
@@ -127,20 +131,37 @@ $(function () {
                     throw new DjangoModelExists(attributes);
                 }
             }
-            return Backbone.Collection.prototype.create.call(this, attributes, $.extend({
+            return Backbone.Collection.prototype.create.call(this, $.extend({
+                z: this.nextPosition()
+            }, attributes), $.extend({
                 success: this.model.prototype.post_save
             }, options));
+        },
+
+        destroy: function (options) {
+            // Backbone should implement a mechanism to keep every object in
+            // the Collection sorted incrementally.
+            this.reZ();
+            return Backbone.Collection.prototype.destroy.call(this, options);
+        },
+
+        // Re-calculates every z.
+        reZ: function () {
+            this.each(function (el, i, list) {
+                el.set({z: i + 1});
+                el.save();
+            });
         },
 
         nextPosition: function () {
             if (!this.length) {
                 return 1;
             }
-            return this.last().get('position') + 1;
+            return this.last().get('z') + 1;
         },
 
         comparator: function (model) {
-            return model.get('position');
+            return model.get('z');
         }
     });
     window.DjangoModels = new DjangoModelList();
