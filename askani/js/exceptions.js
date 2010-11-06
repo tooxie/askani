@@ -49,6 +49,11 @@ $(function () {
         message: 'Nothing to kill :('
     });
 
+    window.NotImplementedError = Backbone.Model.extend({
+        code: 6,
+        message: 'Not implemented :('
+    });
+
     window.ExceptionView = Backbone.View.extend({
 
         tagName: 'div',

@@ -25,6 +25,7 @@
          ExceptionView,
          getDeployCoords,
          NothingToKillError,
+         NotImplementedError,
          window
 */
 
@@ -128,6 +129,7 @@ $(function () {
             'click #new-model': 'createModel',
             'click .model': 'raiseModel',
             'click .model-kill': 'destroyModel',
+            'click .model-metadata': 'modelMetadata',
             'dblclick .model-name': 'promptModelNewName',
             'dragstop .model': 'saveModelCoords',
 
@@ -373,6 +375,11 @@ $(function () {
             return false;
         },
 
+        modelMetadata: function (e) {
+            this.report(new NotImplementedError());
+            return false;
+        },
+
         saveModelCoords: function (e) {
             var model = DjangoModels.get(e.target.id);
             model.setPosition($(e.target).css('left'), $(e.target).css('top'));
@@ -409,7 +416,7 @@ $(function () {
         },
 
         editField: function (e) {
-            $.jAlert(e);
+            this.report(new NotImplementedError());
             return false;
         },
 
