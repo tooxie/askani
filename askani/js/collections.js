@@ -138,11 +138,12 @@ $(function () {
             }, options));
         },
 
-        destroy: function (options) {
+        remove: function (options) {
             // Backbone should implement a mechanism to keep every object in
             // the Collection sorted incrementally.
+            Backbone.Collection.prototype.remove.call(this, options);
             this.reZ();
-            return Backbone.Collection.prototype.destroy.call(this, options);
+            return this;
         },
 
         // Re-calculates every z.

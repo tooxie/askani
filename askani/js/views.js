@@ -182,6 +182,17 @@ $(function () {
                 var view = new DjangoModelView({model: model});
                 view.deploy('#workspace');
             });
+            this.setTabIndex();
+        },
+
+        setTabIndex: function () {
+            var tabindex = 0;
+            $('#workspace').find('.model').each(function (i, el) {
+                $(el).find('a, input').each(function (_i, _el) {
+                    $(_el).attr('tabindex', tabindex);
+                    tabindex += 1;
+                });
+            });
         },
 
         report: function (exception) {
@@ -331,7 +342,6 @@ $(function () {
             model.save();
             model_dom.css('z-index', model.get('z'));
             // this.render();
-            $(e.target).blur().focus();
         },
 
         promptModelNewName: function (e) {
