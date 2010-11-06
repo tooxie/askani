@@ -46,29 +46,30 @@
         <script type="text/template" id="model-template">
             <div class="model ui-draggable" id="<%= id %>" style="position:absolute;left:<%= x %>;top:<%= y %>;z-index:<%= z %>;">
                 <div class="model-name">
-                    <%= name %>
-                    <a href="#" class="model-kill"></a>
+                    <a href="#" class="model-kill" title="Kill model"></a>
+                    <span class="name"><%= name %></span>
+                    <a href="#" class="model-metadata" title="No metadata"></a>
                 </div>
-                <input type="text" class="new-field blur" name="attr-<%= id %>" value="New field" maxlength="50">
+                <input type="text" class="new-model-field blur" name="attr-<%= id %>" value="New field" maxlength="50">
                 <div class="model-fields"></div>
-                <input type="text" class="new-method blur" id="meth-<%= id %>" value="New method" maxlength="50">
+                <input type="text" class="new-model-method blur" id="meth-<%= id %>" value="New method" maxlength="50">
                 <div class="model-methods"></div>
                 <div class="model-footer"></div>
             </div>
         </script>
 
         <script type="text/template" id="model-field-template">
-            <div class="field" id="<%= id %>">
+            <div class="model-field" id="<%= id %>" title="Double click to edit">
                 <span class="type"><%= type %></span>
                 <span class="name"><%= name %></span>
-                <a href="#" class="kill field-kill"></a>
+                <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
             </div>
         </script>
 
         <script type="text/template" id="model-method-template">
-            <div class="method" id="<%= id %>">
-                <span class="name"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
-                <a href="#" class="kill method-kill"></a>
+            <div class="model-method" id="<%= id %>">
+                <span class="name" title="Double click to edit"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
+                <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
             </div>
         </script>
 

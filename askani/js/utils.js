@@ -38,7 +38,7 @@ String.prototype.slugify = function () {
 };
 
 (function ($) {
-    $.jGetHolder = function (message, extra) {
+    $.jGetHolder = function (message, extra, prefill) {
         var extra_html, extra_id, html, id;
         extra_html = extra ? '' : message;
         id = 'askani-message-holder';
@@ -48,8 +48,9 @@ String.prototype.slugify = function () {
         }
         if (extra === 'input') {
             extra_id = id + '-input';
+            prefill = prefill ? prefill : '';
             extra_html += '<label for="' + extra_id + '">' + message + '</label>';
-            extra_html += '<p><input type="text" id="' + extra_id + '" name="' + extra_id + '" maxlength="50"></p>';
+            extra_html += '<p><input type="text" id="' + extra_id + '" name="' + extra_id + '" value="' + prefill + '"></p>';
             $('#' + id).html('<p>' + extra_html + '</p>');
             $('#' + extra_id).keypress(function (e) {
                 if (e.keyCode === 13) {
@@ -85,7 +86,8 @@ String.prototype.slugify = function () {
     };
     $.jPrompt = function (message, options) {
         options = options ? options : {};
-        $.jGetHolder(message, 'input').dialog($.extend($.jDefaults, {
+        prefill = options.prefill ? options.prefill : '';
+        $.jGetHolder(message, 'input', prefill).dialog($.extend($.jDefaults, {
             title: 'Input required',
             buttons: {
                 OK: function () {

@@ -32,7 +32,7 @@ $(function () {
     window.DjangoModelMethodView = Backbone.View.extend({
         tagName: 'div',
 
-        className: 'method',
+        className: 'model-method',
 
         template: _.template($('#model-method-template').html()),
 
@@ -49,7 +49,7 @@ $(function () {
     window.DjangoModelFieldView = Backbone.View.extend({
         tagName: 'div',
 
-        className: 'field',
+        className: 'model-field',
 
         template: _.template($('#model-field-template').html()),
 
@@ -87,7 +87,6 @@ $(function () {
                    .css('top',      pos[1])
                    .css('width',    this.model.get('width'))
                    .css('z-index',  this.model.get('z'));
-            // this.el.resizable({helper: 'ui-resizable-helper'});
             this.el.find('.new-attribute').keypress(function (e) {
                 if (e.keyCode === 13) {
                     App.requestAttributeDetails(e.target.id.substr(5));
@@ -133,19 +132,19 @@ $(function () {
             'dragstop .model': 'saveModelCoords',
 
             // Fields
-            'blur .new-field': 'blurNewField',
-            'click .field-kill': 'destroyField',
-            'dblclick .field': 'editField',
-            'focus .new-field': 'focusNewField',
-            'keypress .new-field': 'createField',
+            'blur .new-model-field': 'blurNewField',
+            'click .model-field-kill': 'destroyField',
+            'dblclick .model-field': 'editField',
+            'focus .new-model-field': 'focusNewField',
+            'keypress .new-model-field': 'createField',
             'sortupdate .model-fields': 'saveFieldPosition',
 
             // Methods
-            'blur .new-method': 'blurNewMethod',
-            'click .method-kill': 'destroyMethod',
-            'dblclick .method': 'editMethod',
-            'focus .new-method': 'focusNewMethod',
-            'keypress .new-method': 'createMethod',
+            'blur .new-model-method': 'blurNewMethod',
+            'click .model-method-kill': 'destroyMethod',
+            'dblclick .model-method .name': 'editMethod',
+            'focus .new-model-method': 'focusNewMethod',
+            'keypress .new-model-method': 'createMethod',
             'sortupdate .model-methods': 'saveMethodPosition'
 
         },
@@ -417,7 +416,7 @@ $(function () {
         saveFieldPosition: function (e) {
             var field, fields;
             fields = DjangoModels.get($(e.target).closest('.model').attr('id')).get('fields');
-            $(e.target).closest('.model-fields').children('.field').each(function (i, el) {
+            $(e.target).closest('.model-fields').children('.model-field').each(function (i, el) {
                 field = fields.get($(el).attr('id'));
                 field.set({position: i + 1});
                 field.save();
@@ -428,7 +427,7 @@ $(function () {
         destroyField: function (e) {
             var field, fields;
             fields = DjangoModels.get($(e.target).closest('.model').attr('id')).get('fields');
-            field = fields.get($(e.target).closest('.field').attr('id'));
+            field = fields.get($(e.target).closest('.model-field').attr('id'));
             $.jConfirm('Delete field ' + field.get('name') + '?', {submit: function (params) {
                 params.field.destroy();
                 params.fields.remove(params.field);
@@ -488,14 +487,16 @@ $(function () {
         },
 
         editMethod: function (e) {
-            $.jAlert(e);
+            $.jPrompt('Method signature:', {prefill: $(e.target).html(), submit: function (signature, e) {
+                console.log(signature);
+            }, context: e});
             return false;
         },
 
         saveMethodPosition: function (e) {
             var method, methods;
             methods = DjangoModels.get($(e.target).closest('.model').attr('id')).get('methods');
-            $(e.target).closest('.model-methods').children('.method').each(function (i, el) {
+            $(e.target).closest('.model-methods').children('.model-method').each(function (i, el) {
                 method = methods.get($(el).attr('id'));
                 method.set({position: i + 1});
                 method.save();
@@ -506,7 +507,7 @@ $(function () {
         destroyMethod: function (e) {
             var method, methods;
             methods = DjangoModels.get($(e.target).closest('.model').attr('id')).get('methods');
-            method = methods.get($(e.target).closest('.method').attr('id'));
+            method = methods.get($(e.target).closest('.model-method').attr('id'));
             $.jConfirm('Delete method ' + method.get('name') + '()?', {submit: function (params) {
                 params.method.destroy();
                 params.methods.remove(params.method);

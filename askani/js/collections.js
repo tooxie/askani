@@ -43,7 +43,7 @@ $(function () {
             if (attributes.name === null) {
                 return false;
             }
-            attributes.name = attributes.name.trim().toLowerCase().replace(' ', '_');
+            attributes.name = attributes.name.trim().toLowerCase().replace(/\s+/g, '_');
             if (attributes.name === "") {
                 throw new EmptyName(attributes);
             }
@@ -85,7 +85,7 @@ $(function () {
             if (attributes.name === null) {
                 return false;
             }
-            attributes.name = attributes.name.trim().toLowerCase().replace(' ', '_');
+            attributes.name = attributes.name.trim().toLowerCase().replace(/\s+/g, '_');
             if (attributes.name === "") {
                 throw new EmptyName(attributes);
             }

@@ -77,41 +77,42 @@ a:hover {
     border-radius:5px 5px 0 0;
     cursor:move;
     height:17px;
-    padding-left:1em;
+    padding-right:3em;
 }
 .model-name .model-kill {
-    float:right;
-    background:transparent url('../img/kill-model.png') 0 0 no-repeat;
+    float:left;
+    background:transparent url('../img/model-kill.png') 0 0 no-repeat;
     display:block;
     width:17px;
     height:17px;
+    margin-right:0.3em;
 }
-.field .type, .field .name {
+.model-field .type, .model-field .name {
     float:left;
-    margin-right:1em;
+    margin-right:0.5em;
 }
-.field, .method {
+.model-field, .model-method {
     padding:0 3px;
     overflow:auto;
     cursor:move;
 }
-.method .name {
+.model-method .name {
     margin-right:1em;
     float:left;
 }
-.field:hover, .method:hover {
+.model-field:hover, .model-method:hover {
     background-color:#EEE;
 }
-.model .kill {
+.model .child-kill {
     float:right;
-    background:transparent url('../img/kill-child.png') 50% 50% no-repeat;
+    background:transparent url('../img/child-kill.png') 50% 50% no-repeat;
     display:block;
     width:12px;
     height:1.6em;
     margin:1px 0;
 }
-.model .kill:hover {
-    background:transparent url('../img/kill-child-hover.png') 50% 50% no-repeat;
+.model .child-kill:hover {
+    background:transparent url('../img/child-kill-hover.png') 50% 50% no-repeat;
 }
 .model-name .model-kill:hover {
     background-position: 0 -17px;
@@ -129,17 +130,12 @@ a:hover {
 .model input {
     margin:0.5em 1em;
 }
-.ui-sortable-helper .kill, .ui-sortable-helper:hover .kill {
+.ui-sortable-helper .child-kill, .ui-sortable-helper:hover .child-kill {
     display:none;
 }
 .ui-sortable-helper, .ui-sortable-helper:hover {
     background-color:transparent;
 }
-/*
-.ui-resizable-helper {
-    border:1px dashed gray;
-}
-*/
 .ui-sortable-placeholder {
     border:1px dashed black;
     height:1.4em;
@@ -159,4 +155,15 @@ a:hover {
 }
 .focus {
     color:black;
+}
+.model-metadata {
+    background:transparent url(../img/metadata-off.png) 0 0 no-repeat;
+    float:right;
+    height:35px;
+    margin-left:0.3em;
+    position:absolute;
+    right:0; /* Hack to make it work in webkit. I wanted
+    it next to the name, not far in the right. */
+    top:-10px;
+    width:35px;
 }
