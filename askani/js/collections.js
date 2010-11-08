@@ -15,13 +15,13 @@
          $,
          Backbone,
          DjangoModel,
-         DjangoModelExists,
+         DjangoModelExistsError,
          DjangoModelField,
-         DjangoModelFieldExists,
+         DjangoModelFieldExistsError,
          DjangoModelList,
          DjangoModelMethod,
-         DjangoModelMethodExists,
-         EmptyName,
+         DjangoModelMethodExistsError,
+         EmptyNameError,
          Store,
          window
 */

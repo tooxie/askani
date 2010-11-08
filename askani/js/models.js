@@ -16,7 +16,7 @@
          DjangoModelFieldList,
          DjangoModelMetadata,
          DjangoModelMethodList,
-         EmptyName,
+         EmptyNameError,
          modelToPython,
          window
 */
@@ -60,11 +60,56 @@ $(function () {
                 if (typeof attributes.name === 'string') {
                     attributes.name = attributes.name.slugify();
                     if (attributes.name === '') {
-                        throw new EmptyName();
+                        throw new EmptyNameError();
                     }
+                }
+                if (attributes.params) {
+                    params = this.parseParams(attributes.params);
                 }
             }
             return Backbone.Model.prototype.set.call(this, attributes, options);
+        },
+
+        parseParams: function (params) {
+            var fc, ftc,
+                k = false,
+                kw = false,
+                l = params.length,
+                names = [],
+                x = 0,
+                y = 0;
+            for (x = 0; x < l; x += 1) {
+                params[x] = params[x].trim();
+                fc = params[x].substr(0, 1);  // First character
+                ftc = params[x].substr(0, 2);  // First two characters
+                params[x] = params[x].slugify();
+                for (y = 0; y < names.length; y += 1) {
+                    if (params[x] === names[y]) {
+                        throw new InvalidParametersError();
+                    }
+                }
+                names[names.length] = params[x];
+                if (ftc == '**') {
+                    if (x + 1 !== l) {
+                        throw new InvalidParametersError();
+                    }
+                    params[x] = '**' + params[x];
+                    kw = true;
+                } else {
+                    if (k || kw) {
+                        throw new InvalidParametersError();
+                    }
+                    if (fc === '*') {
+                        params[x] = '*' + params[x];
+                        k = true;
+                    }
+                }
+            }
+            return params;
+        },
+
+        getSignature: function() {
+            return this.get('name') + '(' + this.get('params').join(', ') + ')';
         }
     });
 
@@ -134,7 +179,7 @@ $(function () {
         sanitizeName: function (name) {
             name = name.toCamelCase();
             if (!name) {
-                throw new EmptyName();
+                throw new EmptyNameError();
             }
             return name;
         },

@@ -33,8 +33,17 @@ String.prototype.toCamelCase = function () {
     return new_val;
 };
 
+// Transforms "CamelCase and Spaces" to "camel_case_and_spaces"
 String.prototype.slugify = function () {
-    return this.replace(/\s+/g, '_').replace(/[^\w\s\-]/g, '').toLowerCase();
+    slug = this.trim().replace(/\s+/g, '_').replace(/[^\w\s\-]/g, '');
+    caps = slug.search(/[A-Z]/);
+    while (caps !== -1) {
+        if (caps !== 0) {
+            slug = slug.substr(0, caps - 1) + '_' + slug[caps].toLowerCase() + slug.substr(caps + 1);
+        }
+        caps = slug.search(/[A-Z]/);
+    }
+    return slug.toLowerCase();
 };
 
 (function ($) {

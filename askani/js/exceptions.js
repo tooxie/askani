@@ -24,22 +24,27 @@ $(function () {
         message: ''
     });
 
-    window.DjangoModelExists = Exception.extend({
+    window.NotImplementedError = Backbone.Model.extend({
+        code: null,
+        message: 'Not implemented :('
+    });
+
+    window.DjangoModelExistsError = Exception.extend({
         code: 2,
         message: 'Model exists'
     });
 
-    window.EmptyName = Exception.extend({
+    window.EmptyNameError = Exception.extend({
         code: 3,
         message: 'Name cannot be empty'
     });
 
-    window.DjangoModelFieldExists = Exception.extend({
+    window.DjangoModelFieldExistsError = Exception.extend({
         code: 4,
         message: 'Model field exists'
     });
 
-    window.DjangoModelMethodExists = Exception.extend({
+    window.DjangoModelMethodExistsError = Exception.extend({
         code: 4,
         message: 'Model method exists'
     });
@@ -49,9 +54,14 @@ $(function () {
         message: 'Nothing to kill :('
     });
 
-    window.NotImplementedError = Backbone.Model.extend({
+    window.InvalidSignatureError = Exception.extend({
         code: 6,
-        message: 'Not implemented :('
+        message: 'Invalid signature'
+    });
+
+    window.InvalidParametersError = Exception.extend({
+        code: 7,
+        message: 'Invalid parameters'
     });
 
     window.ExceptionView = Backbone.View.extend({

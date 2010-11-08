@@ -136,7 +136,7 @@ $(function () {
             // Fields
             'blur .new-model-field': 'blurNewField',
             'click .model-field-kill': 'destroyField',
-            'dblclick .model-field': 'editField',
+            'dblclick .model-field .type, .model-field .name': 'editField',
             'focus .new-model-field': 'focusNewField',
             'keypress .new-model-field': 'createField',
             'sortupdate .model-fields': 'saveFieldPosition',
@@ -495,9 +495,32 @@ $(function () {
 
         editMethod: function (e) {
             $.jPrompt('Method signature:', {prefill: $(e.target).html(), submit: function (signature, e) {
-                console.log(signature);
+                App.parseMethodSignature(signature, e)
             }, context: e});
             return false;
+        },
+
+        parseMethodSignature: function (signature, e) {
+            var match, method, model, name, params;
+            match = signature.match(/^[\w_]+\([\w,\s\*]+\)$/g);
+            if (match === null || (match.length !== 1 && match[0] !== signature)) {
+                this.report(new InvalidSignatureError());
+                return false;
+            }
+            model = DjangoModels.get($(e.target).closest('.model').attr('id'));
+            method = model.get('methods').get($(e.target).parent().attr('id'));
+            i = signature.indexOf('(');
+            try {
+                method.set({
+                    name: signature.substr(0, i),
+                    params: signature.substring(i + 1, signature.length - 1).split(',')
+                });
+            } catch (err) {
+                this.report(err);
+            }
+            method.save();
+            el = $(e.target).parent();
+            el.children('.name').html(method.getSignature());
         },
 
         saveMethodPosition: function (e) {

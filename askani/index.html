@@ -59,9 +59,9 @@
         </script>
 
         <script type="text/template" id="model-field-template">
-            <div class="model-field" id="<%= id %>" title="Double click to edit">
-                <span class="type"><%= type %></span>
-                <span class="name"><%= name %></span>
+            <div class="model-field" id="<%= id %>">
+                <span class="type" title="Double click to edit"><%= type %></span>
+                <span class="name" title="Double click to edit"><%= name %></span>
                 <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
             </div>
         </script>
@@ -86,7 +86,7 @@
                 <div class="ui-state-highlight ui-corner-all">
                     <p>
                         <span class="ui-icon ui-icon-info"></span>
-                        <strong>Hey!</strong> <%= message %><% if(code) { %> (<%= code %>)<% } %>
+                        <strong>Hey!</strong> <%= message %><% if (code) { %> (<%= code %>)<% } %>
                     </p>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                 <div class="ui-state-error ui-corner-all">
                     <p>
                         <span class="ui-icon ui-icon-alert"></span>
-                        <strong>Alert:</strong> <%= message %><% if(code) { %> (<%= code %>)<% } %>
+                        <strong>Alert:</strong> <%= message %><% if (code) { %> (<%= code %>)<% } %>
                     </p>
                 </div>
             </div>
