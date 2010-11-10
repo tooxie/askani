@@ -26,7 +26,6 @@
          window
 */
 $(function () {
-    // FIXME: Abstract and inherit
     window.DjangoModelFieldList = Backbone.Collection.extend({
         model: DjangoModelField,
 
@@ -43,13 +42,9 @@ $(function () {
             if (attributes.name === null) {
                 return false;
             }
-            attributes.name = attributes.name.trim().toLowerCase().replace(/\s+/g, '_');
-            if (attributes.name === "") {
-                throw new EmptyName(attributes);
-            }
             for (x = 0; x < this.size(); x += 1) {
-                if (this.at(x).get('name') === attributes.name) {
-                    throw new DjangoModelFieldExists(attributes);
+                if (this.at(x).isEqual(attributes.name)) {
+                    throw new DjangoModelFieldExistsError(attributes);
                 }
             }
             return Backbone.Collection.prototype.create.call(this, $.extend({
@@ -85,13 +80,9 @@ $(function () {
             if (attributes.name === null) {
                 return false;
             }
-            attributes.name = attributes.name.trim().toLowerCase().replace(/\s+/g, '_');
-            if (attributes.name === "") {
-                throw new EmptyName(attributes);
-            }
             for (x = 0; x < this.size(); x += 1) {
-                if (this.at(x).get('name') === attributes.name) {
-                    throw new DjangoModelMethodExists(attributes);
+                if (this.at(x).isEqual(attributes.name)) {
+                    throw new DjangoModelMethodExistsError(attributes);
                 }
             }
             return Backbone.Collection.prototype.create.call(this, $.extend({
@@ -117,18 +108,15 @@ $(function () {
         localStorage: new Store("djangomodels"),
 
         create: function (attributes, options) {
-            var l = this.length, x;
+            var l = this.length,
+                x;
             options = options ? options : {};
             if (attributes.name === null) {
                 return false;
             }
-            attributes.name = attributes.name.trim().toCamelCase();
-            if (attributes.name === "") {
-                throw new EmptyName(attributes);
-            }
             for (x = 0; x < l; x += 1) {
-                if (this.at(x).get('name').toLowerCase() === attributes.name.toLowerCase()) {
-                    throw new DjangoModelExists(attributes);
+                if (this.at(x).isEqual(attributes.name)) {
+                    throw new DjangoModelExistsError(attributes);
                 }
             }
             return Backbone.Collection.prototype.create.call(this, $.extend({

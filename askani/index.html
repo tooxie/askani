@@ -47,7 +47,7 @@
             <div class="model ui-draggable" id="<%= id %>" style="position:absolute;left:<%= x %>;top:<%= y %>;z-index:<%= z %>;">
                 <div class="model-name">
                     <a href="#" class="model-kill" title="Kill model"></a>
-                    <span class="name"><%= name %></span>
+                    <span class="name<% if (base_class) { %> inherits<% } %>" title="<%= base_class %>"><%= name %></span>
                     <a href="#" class="model-metadata" title="No metadata"></a>
                 </div>
                 <input type="text" class="new-model-field blur" name="attr-<%= id %>" value="New field" maxlength="50">
@@ -68,8 +68,19 @@
 
         <script type="text/template" id="model-method-template">
             <div class="model-method" id="<%= id %>">
-                <span class="name" title="Double click to edit"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
+                <span class="signature" title="Double click to edit"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
                 <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
+            </div>
+        </script>
+
+        <script type="text/template" id="method-signature-template">
+            <div id="method-signature-template-holder">
+                <label for="">Method signature:</label>
+                <div class="field">
+                    <p>
+                        <input type="text" id="method-signature-input" name="method-signature-input" value="<%= signature %>">
+                    <p>
+                </div>
             </div>
         </script>
 
@@ -77,6 +88,30 @@
             <div class="metadata">
                 <span class="name"><%= name %></span>
                 <span class="value"><%= value %></span>
+            </div>
+        </script>
+
+        <!-- Model name -->
+        <script type="text/template" id="model-name-template">
+            <div class="model-name-template" id="model-name-template-holder">
+                <div class="field">
+                    <label for="model-name-input"><%= label %>:</label>
+                    <p>
+                        <input type="text" id="model-name-input" name="model-name-input" value="<%= name %>">
+                    </p>
+                </div>
+                <div class="field">
+                    <label for="model-name-overwrite-inheritance">Do not inherit from db.models.Model:</label>
+                    <input type="checkbox" class="checkbox" id="model-name-overwrite-inheritance" name="model-name-overwrite-inheritance"<% if (base_class) { %> checked<% } %>>
+                </div>
+                <div class="field">
+                    <div class="base-class<% if (!base_class) { %> invisible<% } %>">
+                        <label for="model-base-class">Inherit from:</label>
+                        <p>
+                            <input type="text" id="model-base-class" name="model-base-class" value="<%= base_class %>">
+                        </p>
+                    </div>
+                </div>
             </div>
         </script>
 

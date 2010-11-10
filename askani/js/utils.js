@@ -35,11 +35,23 @@ String.prototype.toCamelCase = function () {
 
 // Transforms "CamelCase and Spaces" to "camel_case_and_spaces"
 String.prototype.slugify = function () {
-    slug = this.trim().replace(/\s+/g, '_').replace(/[^\w\s\-]/g, '');
+    var caps, lower, prev, slug, u;
+    lower = this.search(/[a-z]/);
+    slug = this.trim().replace(/[\s\-]+/g, '_').replace(/[^\w\s]/g, '');
+    if (lower === -1) {
+        return slug.toLowerCase();
+    }
     caps = slug.search(/[A-Z]/);
+    prev = null;
     while (caps !== -1) {
-        if (caps !== 0) {
-            slug = slug.substr(0, caps - 1) + '_' + slug[caps].toLowerCase() + slug.substr(caps + 1);
+        if (caps === 0) {
+            slug = slug[0].toLowerCase() + slug.substr(1);
+        } else {
+            u = '_';
+            if (slug[caps - 1] === '_') {
+                u = '';
+            }
+            slug = slug.substr(0, caps) + u + slug[caps].toLowerCase() + slug.substr(caps + 1);
         }
         caps = slug.search(/[A-Z]/);
     }
@@ -48,40 +60,41 @@ String.prototype.slugify = function () {
 
 (function ($) {
     $.jGetHolder = function (message, extra, prefill) {
-        var extra_html, extra_id, html, id;
-        extra_html = extra ? '' : message;
+        var html, id, residue;
+        residue = $('.ui-dialog');
+        if (residue.size()) {
+            residue.detach();
+        }
+        html = $(message);
+        if (html.size()) {
+            return html;
+        }
         id = 'askani-message-holder';
         if (!$('#' + id).size()) {
             html = '<span id="' + id + '" style="display:none;"></span>';
             $('body').append(html);
         }
-        if (extra === 'input') {
-            extra_id = id + '-input';
-            prefill = prefill ? prefill : '';
-            extra_html += '<label for="' + extra_id + '">' + message + '</label>';
-            extra_html += '<p><input type="text" id="' + extra_id + '" name="' + extra_id + '" value="' + prefill + '"></p>';
-            $('#' + id).html('<p>' + extra_html + '</p>');
-            $('#' + extra_id).keypress(function (e) {
-                if (e.keyCode === 13) {
-                    $('div.ui-dialog').find('button:first').focus().trigger('click');
-                }
-            });
-            return $('#' + id);
-        } else {
-            return $('#' + id).html('<p>' + message + '</p>');
-        }
+        return $('#' + id).html('<p>' + message + '</p>');
     };
     $.jDefaults = {
-        title: 'Attention',
-        modal: true,
-        show: 'fade',
         hide: 'fade',
-        resizable: false,
+        modal: true,
         open: function (event, ui) {
             $(event.target).find('input').each(function (i, el) {
                 $(this).css('width', $(el).parent().innerWidth());
+                $(this).keypress(function(e) {
+                    if(e.keyCode === 13) {
+                        $('.ui-dialog').find('button:first').click();
+                    }
+                });
             });
-        }
+        },
+        resizable: false,
+        show: 'fade',
+        submit: function(event, ui) {
+            $(this).dialog('close');
+        },
+        title: 'Attention',
     };
     $.jAlert = function (message, options) {
         options = options ? options : {};
@@ -94,16 +107,17 @@ String.prototype.slugify = function () {
         }, options));
     };
     $.jPrompt = function (message, options) {
+        var m_id, prefill;
         options = options ? options : {};
         prefill = options.prefill ? options.prefill : '';
-        $.jGetHolder(message, 'input', prefill).dialog($.extend($.jDefaults, {
+        $.jGetHolder(message).dialog($.extend($.jDefaults, {
             title: 'Input required',
             buttons: {
                 OK: function () {
                     $(this).dialog('close');
                     if (options.submit) {
                         var context = options.context ? options.context : null;
-                        options.submit($(this).find('input:first').val(), context);
+                        options.submit(context);
                     }
                 }
             }

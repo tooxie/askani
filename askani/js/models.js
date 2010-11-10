@@ -37,7 +37,22 @@ $(function () {
         },
 
         set: function (attributes, options) {
+            if (typeof attributes !== 'undefined') {
+                if (typeof attributes.name === 'string') {
+                    attributes.name = attributes.name.slugify();
+                    if (attributes.name === '') {
+                        throw new EmptyNameError();
+                    }
+                }
+            }
             return Backbone.Model.prototype.set.call(this, attributes, options);
+        },
+
+        isEqual: function (field) {
+            if (typeof field === 'string') {
+                return (this.get('name') === field.slugify())
+            }
+            return (this.get('name') === method.get('name'));
         }
     });
 
@@ -110,6 +125,13 @@ $(function () {
 
         getSignature: function() {
             return this.get('name') + '(' + this.get('params').join(', ') + ')';
+        },
+
+        isEqual: function (method) {
+            if (typeof method === 'string') {
+                return (this.get('name') === method.slugify())
+            }
+            return (this.get('name') === method.get('name'));
         }
     });
 
@@ -123,6 +145,7 @@ $(function () {
         initialize: function () {
             var args, defaults, key;
             defaults = {
+                base_class: '',
                 metadata: new DjangoModelMetadata(),
                 name: '',
                 x: 0,
@@ -168,9 +191,7 @@ $(function () {
         set: function (attributes, options) {
             if (typeof attributes !== 'undefined') {
                 if (attributes.name !== null && typeof attributes.name !== 'undefined') {
-                    if (attributes.name.trim() !== '') {
-                        attributes.name = this.sanitizeName(attributes.name);
-                    }
+                    attributes.name = this.sanitizeName(attributes.name);
                 }
             }
             return Backbone.Model.prototype.set.call(this, attributes, options);
@@ -194,7 +215,10 @@ $(function () {
         },
 
         isEqual: function (model) {
-            return (this.name === model.name);
+            if (typeof model === 'string') {
+                return (this.get('name') === model.slugify())
+            }
+            return (this.get('name') === model.get('name'));
         },
 
         toPython: function () {

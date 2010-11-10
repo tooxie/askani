@@ -27,8 +27,10 @@ a:hover {
     display:inline;
     margin-right:2em;
 }
+.invisible {
+    display:none;
+}
 .hidden {
-    /* display:none; */
     visibility:hidden;
 }
 .ui-state-error, .ui-state-highlight {
@@ -96,7 +98,7 @@ a:hover {
     overflow:auto;
     cursor:move;
 }
-.model-method .name {
+.model-method .signature {
     margin-right:1em;
     float:left;
 }
@@ -140,11 +142,14 @@ a:hover {
     border:1px dashed black;
     height:1.4em;
 }
+.ui-dialog-content .field p {
+    margin:1em;
+}
 .ui-dialog-content p {
     margin:0 1em;
 }
-.ui-dialog-content p input {
-    margin-top:1em;
+.ui-dialog-content input {
+    vertical-align:middle;
 }
 #code {
     height:325px;
@@ -166,4 +171,7 @@ a:hover {
     it next to the name, not far in the right. */
     top:-10px;
     width:35px;
+}
+.inherits:after {
+    content:"*";
 }
