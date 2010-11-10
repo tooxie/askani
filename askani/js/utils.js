@@ -148,8 +148,9 @@ function emSize(size) {
 }
 
 function modelToPython(model) {
-    var code, field, field_count, method, method_count, type, x;
-    code = 'class ' + model.get('name') + '(models.Model):\n';
+    var base_class, code, field, field_count, method, method_count, type, x;
+    base_class = model.get('base_class') ? model.get('base_class') : 'models.Model';
+    code = 'class ' + model.get('name') + '(' + base_class + '):\n';
     field_count = model.get('fields').size();
     for (x = 0; x < field_count; x += 1) {
         field = model.get('fields').at(x);
