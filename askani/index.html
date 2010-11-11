@@ -43,11 +43,14 @@
         <div id="workspace"></div>
 
         <!-- Templates -->
+
+        <!-- Model -->
         <script type="text/template" id="model-template">
             <div class="model ui-draggable" id="<%= id %>" style="position:absolute;left:<%= x %>;top:<%= y %>;z-index:<%= z %>;">
                 <div class="model-name">
                     <a href="#" class="model-kill" title="Kill model"></a>
-                    <span class="name<% if (base_class) { %> inherits<% } %>" title="<%= base_class %>"><%= name %></span>
+                    <span class="name" title="Double click to edit"><%= name %></span>
+                    <% if (base_class) { %><br><span class="base-class" title="Double click to edit">(<%= base_class %>)</span><% } %>
                     <a href="#" class="model-metadata" title="No metadata"></a>
                 </div>
                 <input type="text" class="new-model-field blur" name="attr-<%= id %>" value="New field" maxlength="50">
@@ -58,6 +61,7 @@
             </div>
         </script>
 
+        <!-- Model field -->
         <script type="text/template" id="model-field-template">
             <div class="model-field" id="<%= id %>">
                 <span class="type" title="Double click to edit"><%= type %></span>
@@ -66,6 +70,7 @@
             </div>
         </script>
 
+        <!-- Model method -->
         <script type="text/template" id="model-method-template">
             <div class="model-method" id="<%= id %>">
                 <span class="signature" title="Double click to edit"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
@@ -73,6 +78,7 @@
             </div>
         </script>
 
+        <!-- Method signature -->
         <script type="text/template" id="method-signature-template">
             <div id="method-signature-template-holder">
                 <label for="">Method signature:</label>
@@ -84,6 +90,7 @@
             </div>
         </script>
 
+        <!-- Metadata -->
         <script type="text/template" id="model-metadata-template">
             <div class="metadata">
                 <span class="name"><%= name %></span>
@@ -139,6 +146,7 @@
             </div>
         </script>
 
+        <!-- stdout -->
         <div id="output" class="hidden">
             <textarea id="code" cols="80" rows="20"></textarea>
         </div>

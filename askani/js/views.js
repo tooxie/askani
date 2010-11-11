@@ -125,7 +125,7 @@ $(function () {
             'click .model': 'raiseModel',
             'click .model-kill': 'destroyModel',
             'click .model-metadata': 'modelMetadata',
-            'dblclick .model-name .name': 'promptModelNewName',
+            'dblclick .model-name .name, .model-name .base-class': 'promptModelNewName',
             'dragstop .model': 'saveModelCoords',
 
             // Fields
@@ -364,11 +364,13 @@ $(function () {
         },
 
         promptModelNewName: function (e) {
-            var el = $(e.target);
+            var base_class,
+                el = $(e.target).parent();
+            base_class = el.find('.base-class').html();
             $.jPrompt(_.template($('#model-name-template').html())({
                 label: 'Model name',
-                name: el.html(),
-                base_class: el.attr('title')
+                name: el.find('.name').html(),
+                base_class: base_class ? base_class.substring(1, base_class.length - 1) : ''
             }), {
                 submit: function (context) {
                     App.changeModelName(context);

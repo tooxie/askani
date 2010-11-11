@@ -74,24 +74,26 @@ a:hover {
 }
 .model-name {
     -moz-border-radius:5px 5px 0 0;
-    background:#E8E7E7 url('../img/model_name-bg.png') 0 0 repeat-x;
+    background:#E8E7E7 url('../img/model_name-bg.png') 50% 50% repeat-x;
     border-bottom:1px solid gray;
     border-radius:5px 5px 0 0;
     cursor:move;
-    height:17px;
     padding-right:3em;
 }
 .model-name .model-kill {
-    float:left;
     background:transparent url('../img/model-kill.png') 0 0 no-repeat;
     display:block;
-    width:17px;
+    float:left;
     height:17px;
     margin-right:0.3em;
+    width:17px;
 }
 .model-field .type, .model-field .name {
     float:left;
-    margin-right:0.5em;
+    padding-right:0.5em;
+}
+.model-name .base-class {
+    font-size:0.8em;
 }
 .model-field, .model-method {
     padding:0 3px;
