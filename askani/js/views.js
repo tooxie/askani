@@ -7,7 +7,7 @@
          nomen: false,
          onevar: true,
          plusplus: true,
-         regexp: true,
+         regexp: false,
          undef: true,
          white: true
 */
@@ -24,6 +24,7 @@
          emSize,
          ExceptionView,
          getDeployCoords,
+         InvalidSignatureError,
          NothingToKillError,
          NotImplementedError,
          window
@@ -38,7 +39,7 @@ $(function () {
         template: _.template($('#model-method-template').html()),
 
         render: function () {
-            return this.template(this.model.toJSON());
+            return this.template({method: this.model});
         },
 
         deploy: function (element_id) {
@@ -55,7 +56,7 @@ $(function () {
         template: _.template($('#model-field-template').html()),
 
         render: function () {
-            return this.template(this.model.toJSON());
+            return this.template({field: this.model});
         },
 
         deploy: function (element_id) {
@@ -72,7 +73,7 @@ $(function () {
         template: _.template($('#model-template').html()),
 
         render: function () {
-            return this.template(this.model.toJSON());
+            return this.template({model: this.model});
         },
 
         deploy: function (element_id, pos) {
@@ -124,7 +125,7 @@ $(function () {
             'click #new-model': 'promptModelName',
             'click .model': 'raiseModel',
             'click .model-kill': 'destroyModel',
-            'click .model-metadata': 'modelMetadata',
+            'click .model-meta': 'modelMetaOptions',
             'dblclick .model-name .name, .model-name .base-class': 'promptModelNewName',
             'dragstop .model': 'saveModelCoords',
 
@@ -147,7 +148,7 @@ $(function () {
         },
 
         initialize: function () {
-            var list, sortable_args;
+            var sortable_args;
             _.bindAll(this, 'createModel', 'createField', 'createMethod', 'destroyMethod', 'render');
             // DjangoModels.bind('add', this.addOne);
             // DjangoModels.bind('refresh', this.addAll);
@@ -235,8 +236,9 @@ $(function () {
 
         output: function (code) {
             var margin = emSize(2.7);
-            $('#code').val(code.trim()).focus();
-            $('#output').removeClass('hidden').dialog({
+            $.jAlert(_.template($('#output-template').html())({
+                code: code.trim()
+            }), {
                 buttons: {
                     Close: function (e, ui) {
                         $(this).dialog('close');
@@ -247,11 +249,13 @@ $(function () {
                 modal: true,
                 show: 'fade',
                 width: 625 + margin
-            }).fadeIn();
+            });
         },
 
         destroyTheWorld: function (e) {
-            var models_count = DjangoModels.length, x;
+            var model,
+                models_count = DjangoModels.length,
+                x;
             if (models_count === 0) {
                 this.report(new NothingToKillError());
                 return false;
@@ -310,7 +314,7 @@ $(function () {
         },
 
         raiseModel: function (e) {
-            var model, model_dom, model_id, z;
+            var model, model_dom, model_id;
             if (DjangoModels.length === 1) {
                 return true;
             }
@@ -407,9 +411,38 @@ $(function () {
             return false;
         },
 
-        modelMetadata: function (e) {
-            this.report(new NotImplementedError());
+        modelMetaOptions: function (e) {
+            $.jPrompt(_.template($('#model-meta-template').html())({
+                model: DjangoModels.get($(e.target).closest('.model').attr('id')),
+            }), {
+                context: e,
+                resizable: true,
+                submit: function (e) {
+                    App.setMetaOptions(e);
+                },
+                title: 'Model Meta options',
+                width: 340
+            });
             return false;
+        },
+
+        setMetaOptions: function (e) {
+            var model,
+                options = {},
+                val = '';
+            model = DjangoModels.get($(e.target).closest('.model').attr('id'));
+            for (meta in model.get('meta_options')) {
+                option_id = meta.replace(/_/g, '-') + '--' + model.id;
+                if (model.get('meta_options')[meta].type !== 'boolean') {
+                    val = $('#' + option_id).val();
+                    options[meta] = val ? val : '';
+                }
+            }
+            $('.model-meta-template-holder input:checked').each(function () {
+                options[this.id.substr(0, this.id.indexOf('--')).replace(/-/g, '_')] = ($(this).val() === 'true') ? true : false;
+            });
+            model.setMeta(options);
+            this.initialize();
         },
 
         saveModelCoords: function (e) {
@@ -464,14 +497,18 @@ $(function () {
         },
 
         destroyField: function (e) {
-            var field, fields;
-            fields = DjangoModels.get($(e.target).closest('.model').attr('id')).get('fields');
+            var field, fields, model;
+            model = DjangoModels.get($(e.target).closest('.model').attr('id'));
+            fields = model.get('fields');
             field = fields.get($(e.target).closest('.model-field').attr('id'));
             $.jConfirm('Kill field ' + field.get('name') + '?', {submit: function (params) {
                 params.field.destroy();
                 params.fields.remove(params.field);
+                if (params.model.getMeta('get_latest_by') === params.model.id) {
+                    params.model.setMeta({'get_latest_by': ''});
+                }
                 App.initialize();
-            }, context: {field: field, fields: fields}});
+            }, context: {field: field, fields: fields, model: model}});
             return false;
         },
 
@@ -531,7 +568,7 @@ $(function () {
         },
 
         parseMethodSignature: function (e) {
-            var match, method, model, name, params, signature;
+            var el, i, match, method, model, signature;
             signature = $('#method-signature-template-holder').find('#method-signature-input').val();
             match = signature.match(/^[\w_]+\([\w,\s\*]+\)$/g);
             if (match === null || (match.length !== 1 && match[0] !== signature)) {

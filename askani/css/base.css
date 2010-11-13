@@ -16,6 +16,9 @@ a:hover {
     /* color:#FFE761; */
     color:black;
 }
+.ui-dialog-content a {
+    color:blue;
+}
 #toolbar {
     background-color:white;
     list-style-type:none;
@@ -36,6 +39,9 @@ a:hover {
 .ui-state-error, .ui-state-highlight {
     margin:0.7em;
     padding:0 0.7em;
+}
+span.error {
+    color:red;
 }
 .ui-state-highlight {
     margin-top:20px;
@@ -163,8 +169,8 @@ a:hover {
 .focus {
     color:black;
 }
-.model-metadata {
-    background:transparent url(../img/metadata-off.png) 0 0 no-repeat;
+.model-meta {
+    background:transparent url(../img/meta_options-off.png) 0 0 no-repeat;
     float:right;
     height:35px;
     margin-left:0.3em;
@@ -174,6 +180,34 @@ a:hover {
     top:-10px;
     width:35px;
 }
+a.has-meta {
+    background:transparent url(../img/meta_options-on.png) 0 0 no-repeat;
+}
 .inherits:after {
     content:"*";
+}
+.ui-dialog-content .meta-option {
+    clear:none;
+    float:left;
+    margin-bottom:5px;
+    width:150px;
+}
+.ui-dialog-content .even {
+    clear:left;
+    margin-right:20px;
+}
+.ui-dialog-content select {
+    min-width:150px;
+}
+.meta-options {
+    overflow:auto;
+}
+a.doc {
+    height:17px;
+    padding-left:20px;
+    background:transparent url(../img/help.png) 0 50% no-repeat;
+    display:block;
+}
+.abstract {
+    font-style:italic;
 }

@@ -7,7 +7,7 @@
          nomen: false,
          onevar: true,
          plusplus: true,
-         regexp: true,
+         regexp: false,
          undef: true,
          white: true
 */
@@ -77,13 +77,14 @@ String.prototype.slugify = function () {
         return $('#' + id).html('<p>' + message + '</p>');
     };
     $.jDefaults = {
+        height: 'auto',
         hide: 'fade',
         modal: true,
         open: function (event, ui) {
             $(event.target).find('input').each(function (i, el) {
                 $(this).css('width', $(el).parent().innerWidth());
-                $(this).keypress(function(e) {
-                    if(e.keyCode === 13) {
+                $(this).keypress(function (e) {
+                    if (e.keyCode === 13) {
                         $('.ui-dialog').find('button:first').click();
                     }
                 });
@@ -91,14 +92,14 @@ String.prototype.slugify = function () {
         },
         resizable: false,
         show: 'fade',
-        submit: function(event, ui) {
+        submit: function (event, ui) {
             $(this).dialog('close');
         },
-        title: 'Attention',
+        title: 'Attention'
     };
     $.jAlert = function (message, options) {
         options = options ? options : {};
-        $.jGetHolder(message).dialog($.extend($.jDefaults, {
+        $.jGetHolder(message).dialog($.extend({}, $.jDefaults, {
             buttons: {
                 Close: function () {
                     $(this).dialog('close');
@@ -107,10 +108,10 @@ String.prototype.slugify = function () {
         }, options));
     };
     $.jPrompt = function (message, options) {
-        var m_id, prefill;
+        var prefill;
         options = options ? options : {};
         prefill = options.prefill ? options.prefill : '';
-        $.jGetHolder(message).dialog($.extend($.jDefaults, {
+        $.jGetHolder(message).dialog($.extend({}, $.jDefaults, {
             title: 'Input required',
             buttons: {
                 OK: function () {
@@ -125,7 +126,7 @@ String.prototype.slugify = function () {
     };
     $.jConfirm = function (message, options) {
         options = options ? options : {};
-        $.jGetHolder(message).dialog($.extend($.jDefaults, {
+        $.jGetHolder(message).dialog($.extend({}, $.jDefaults, {
             buttons: {
                 Yes: function () {
                     $(this).dialog('close');

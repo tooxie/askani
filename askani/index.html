@@ -46,16 +46,16 @@
 
         <!-- Model -->
         <script type="text/template" id="model-template">
-            <div class="model ui-draggable" id="<%= id %>" style="position:absolute;left:<%= x %>;top:<%= y %>;z-index:<%= z %>;">
+            <div class="model ui-draggable" id="<%= model.id %>" style="position:absolute;left:<%= model.get('x') %>;top:<%= model.get('y') %>;z-index:<%= model.get('z') %>;">
                 <div class="model-name">
                     <a href="#" class="model-kill" title="Kill model"></a>
-                    <span class="name" title="Double click to edit"><%= name %></span>
-                    <% if (base_class) { %><br><span class="base-class" title="Double click to edit">(<%= base_class %>)</span><% } %>
-                    <a href="#" class="model-metadata" title="No metadata"></a>
+                    <span class="name<% if (model.isAbstract()) { %> abstract<% } %>" title="Double click to edit"><%= model.get('name') %></span>
+                    <% if (model.get('base_class')) { %><br><span class="base-class" title="Double click to edit">(<%= model.get('base_class') %>)</span><% } %>
+                    <a href="#" class="model-meta<% if (model.get('has_meta')) { %> has-meta<% } else { %>" title="No Meta options<% } %>"></a>
                 </div>
-                <input type="text" class="new-model-field blur" name="attr-<%= id %>" value="New field" maxlength="50">
+                <input type="text" class="new-model-field blur" name="attr-<%= model.id %>" value="New field" maxlength="50">
                 <div class="model-fields"></div>
-                <input type="text" class="new-model-method blur" id="meth-<%= id %>" value="New method" maxlength="50">
+                <input type="text" class="new-model-method blur" id="meth-<%= model.id %>" value="New method" maxlength="50">
                 <div class="model-methods"></div>
                 <div class="model-footer"></div>
             </div>
@@ -63,17 +63,17 @@
 
         <!-- Model field -->
         <script type="text/template" id="model-field-template">
-            <div class="model-field" id="<%= id %>">
-                <span class="type" title="Double click to edit"><%= type %></span>
-                <span class="name" title="Double click to edit"><%= name %></span>
+            <div class="model-field" id="<%= field.id %>">
+                <span class="type" title="Double click to edit"><%= field.get('type') %></span>
+                <span class="name" title="Double click to edit"><%= field.get('name') %></span>
                 <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
             </div>
         </script>
 
         <!-- Model method -->
         <script type="text/template" id="model-method-template">
-            <div class="model-method" id="<%= id %>">
-                <span class="signature" title="Double click to edit"><%= name %>(<% if (params) { %><%= params.join(', ') %><% } %>)</span>
+            <div class="model-method" id="<%= method.id %>">
+                <span class="signature" title="Double click to edit"><%= method.get('name') %>(<%= method.get('params').join(', ') %>)</span>
                 <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
             </div>
         </script>
@@ -91,10 +91,41 @@
         </script>
 
         <!-- Metadata -->
-        <script type="text/template" id="model-metadata-template">
-            <div class="metadata">
-                <span class="name"><%= name %></span>
-                <span class="value"><%= value %></span>
+        <script type="text/template" id="model-meta-template">
+            <div class="model-meta-template-holder">
+                <div class="meta-options">
+                    <% x = 0; %>
+                    <% for (meta in model.get('meta_options')) { %>
+                        <% option_id = meta.replace(/_/g, '-') + '--' + model.id; %>
+                        <div class="meta-option<% if (x % 2 === 0) { %> even<% } %>">
+                            <label for="<%= option_id %>"><%= meta.substr(0, 1).toUpperCase() + meta.substr(1).replace(/_/g, ' ') %>:</label>
+                            <% option_type = model.get('meta_options')[meta].type; %>
+                            <div>
+                                <% if (option_type === 'boolean') { %>
+                                    <label for="<%= option_id %>-t">True</label>
+                                    <input type="radio" name="<%= option_id %>" id="<%= option_id %>-t" value="true"<% if (model.getMeta(meta)) { %> checked<% } %>>
+                                    <label for="<%= option_id %>-f">False</label>
+                                    <input type="radio" name="<%= option_id %>" id="<%= option_id %>-f" value="false"<% if (!model.getMeta(meta)) { %> checked<% } %>>
+                                <% } else if (option_type === 'choice') { %>
+                                    <% if (model.get('fields').size() === 0) { %>
+                                        <span class="error">No fields to choose from.</span>
+                                    <% } else {%>
+                                        <select id="<%= option_id %>">
+                                            <option>--- Choose ---</option>
+                                            <% model.get('fields').each(function (el, i) { %>
+                                                <option value="<%= el.id %>"<% if (model.getMeta(meta) === el.id) { %> selected<% } %>><%= el.get('name') %></option>
+                                            <% }); %>
+                                        </select>
+                                    <% } %>
+                                <% } else if (option_type === 'text') { %>
+                                    <input type="text" name="<%= option_id %>" id="<%= option_id %>" value="">
+                                <% } %>
+                            </div>
+                        </div>
+                        <% x += 1; %>
+                    <% } %>
+                </div>
+                <a href="http://docs.djangoproject.com/en/dev/ref/models/options/" class="doc">Model Meta options documentation</a>
             </div>
         </script>
 
@@ -147,9 +178,11 @@
         </script>
 
         <!-- stdout -->
-        <div id="output" class="hidden">
-            <textarea id="code" cols="80" rows="20"></textarea>
-        </div>
+        <script type="text-template" id="output-template">
+            <div id="output">
+                <textarea id="code" cols="80" rows="20"><%= code %></textarea>
+            </div>
+        </script>
 
         <!-- Why I don't (and you shouldn't) use XHTML:
             http://www.tangerinesmash.com/2007/html-vs-xhtml-best-tool-job/

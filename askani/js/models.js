@@ -7,7 +7,7 @@
          nomen: false,
          onevar: true,
          plusplus: true,
-         regexp: true,
+         regexp: false,
          undef: true,
          white: true
 */
@@ -17,6 +17,7 @@
          DjangoModelMetadata,
          DjangoModelMethodList,
          EmptyNameError,
+         InvalidParametersError,
          modelToPython,
          window
 */
@@ -50,9 +51,9 @@ $(function () {
 
         isEqual: function (field) {
             if (typeof field === 'string') {
-                return (this.get('name') === field.slugify())
+                return (this.get('name') === field.slugify());
             }
-            return (this.get('name') === method.get('name'));
+            return (this.get('name') === field.get('name'));
         }
     });
 
@@ -79,7 +80,7 @@ $(function () {
                     }
                 }
                 if (attributes.params) {
-                    params = this.parseParams(attributes.params);
+                    attributes.params = this.parseParams(attributes.params);
                 }
             }
             return Backbone.Model.prototype.set.call(this, attributes, options);
@@ -104,7 +105,7 @@ $(function () {
                     }
                 }
                 names[names.length] = params[x];
-                if (ftc == '**') {
+                if (ftc === '**') {
                     if (x + 1 !== l) {
                         throw new InvalidParametersError();
                     }
@@ -123,30 +124,93 @@ $(function () {
             return params;
         },
 
-        getSignature: function() {
+        getSignature: function () {
             return this.get('name') + '(' + this.get('params').join(', ') + ')';
         },
 
         isEqual: function (method) {
             if (typeof method === 'string') {
-                return (this.get('name') === method.slugify())
+                return (this.get('name') === method.slugify());
             }
             return (this.get('name') === method.get('name'));
         }
     });
 
-    window.DjangoModelMetadata = Backbone.Model.extend({
-        name: '',
-
-        value: ''
-    });
+    var meta_options = {
+        'abstract': {
+            type: 'boolean',
+            default: false,
+            value: false
+        },
+        'app_label': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'db_table': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'db_tablespace': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'get_latest_by': {
+            type: 'choice',
+            default: '',
+            value: ''
+        },
+        'managed': {
+            type: 'boolean',
+            default: true,
+            value: true
+        },
+        'order_with_respect_to': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'ordering': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'permissions': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'proxy': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'unique_together': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'verbose_name': {
+            type: 'text',
+            default: '',
+            value: ''
+        },
+        'verbose_name_plural': {
+            type: 'text',
+            default: '',
+            value: ''
+        }
+    };
 
     window.DjangoModel = Backbone.Model.extend({
         initialize: function () {
             var args, defaults, key;
             defaults = {
                 base_class: '',
-                metadata: new DjangoModelMetadata(),
+                has_meta: false,
+                meta_options: meta_options,
                 name: '',
                 x: 0,
                 y: 0,
@@ -214,9 +278,32 @@ $(function () {
             });
         },
 
+        setMeta: function (options) {
+            var has_meta = false,
+                meta = this.get('meta_options');
+            for (opt in options) {
+                meta[opt].value = options[opt];
+                if (meta[opt].value !== meta[opt].default) {
+                    has_meta = true;
+                }
+            }
+            this.save({
+                meta_options: meta,
+                has_meta: has_meta
+            });
+        },
+
+        getMeta: function (key) {
+            return this.get('meta_options')[key].value;
+        },
+
+        isAbstract: function () {
+            return this.getMeta('abstract') === true;
+        },
+
         isEqual: function (model) {
             if (typeof model === 'string') {
-                return (this.get('name') === model.slugify())
+                return (this.get('name') === model.slugify());
             }
             return (this.get('name') === model.get('name'));
         },
