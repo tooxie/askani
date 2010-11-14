@@ -186,13 +186,13 @@ a.has-meta {
 .inherits:after {
     content:"*";
 }
-.ui-dialog-content .meta-option, .ui-dialog-content .field {
+.ui-dialog-content .meta-option, .ui-dialog-content .model-field-edit {
     clear:none;
     float:left;
     margin-bottom:5px;
     width:150px;
 }
-.ui-dialog-content .field input {
+.ui-dialog-content .model-field-edit input {
     width:150px;
 }
 .ui-dialog-content .even {

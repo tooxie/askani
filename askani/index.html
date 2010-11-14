@@ -28,9 +28,11 @@
             <li>
                 <a href="#" id="to-python">[~] To python</a>
             </li>
+            <!--
             <li>
                 <a href="#" id="to-json">[:] To JSON</a>
             </li>
+            -->
             <li>
                 <a href="#" id="kill-all">[!] Kill all</a>
             </li>
@@ -75,11 +77,11 @@
         <script type="text/template" id="model-field-edit-template">
             <div class="model-field-edit-template-holder">
                 <div class="model-fields-edit">
-                    <div class="field even">
+                    <div class="model-field-edit even">
                         <label for="field-name">Name:</label>
                         <input type="text" name="field-name" id="field-name" value="<%= field.get('name') %>">
                     </div>
-                    <div class="field">
+                    <div class="model-field-edit">
                         <label for="field-type">Type:</label>
                         <input type="text" name="field-type" id="field-type" value="<%= field.get('type') %>">
                     </div>
