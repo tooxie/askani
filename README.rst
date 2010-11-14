@@ -16,50 +16,50 @@ Askani helps you focus just in what's important. You don't need to remember all 
  Features list
 ---------------
 
- * Completely client-side. No web server required.
- * State constantly saved to browser. No risk of losing data on browser crashes.
- * 100% `PEP 8`_ compliant.
- * Validates method signature.
- * Uniform class, field and method names.
- * UML-like graphics.
- * Full meta options support.
- * Produces ready-to-run python code.
- * Optional Google Analytics tracking.
+* Completely client-side. No web server required.
+* State constantly saved to browser. No risk of losing data on browser crashes.
+* 100% `PEP 8`_ compliant.
+* Validates method signature.
+* Uniform class, field and method names.
+* UML-like graphics.
+* Full meta options support.
+* Produces ready-to-run python code.
+* Optional Google Analytics tracking.
 
 -----------
  TODO list
 -----------
 
- * Export and import project.
- * Parse existing models.py.
- * Save models.py to disk.
+* Export and import project.
+* Parse existing models.py.
+* Save models.py to disk.
 
-   * This may need a browser plugin to work.
+  * This may need a browser plugin to work.
 
- * Collaborative (concurrent) work.
- * Represent model relationships.
- * Allow field autocomplete for multiple field choice meta options.
- * Allow global configuration.
+* Collaborative (concurrent) work.
+* Represent model relationships.
+* Allow field autocomplete for multiple field choice meta options.
+* Allow global configuration.
 
 --------------------
  3rd party software
 --------------------
 
- * `jQuery`_.
- * `jQuery UI`_.
- * `Underscore.js`_.
- * `Backbone.js`_.
- * `Backbone localStorage`_.
- * `gaTrack`_.
+* `jQuery`_.
+* `jQuery UI`_.
+* `Underscore.js`_.
+* `Backbone.js`_.
+* `Backbone localStorage`_.
+* `gaTrack`_.
 
 -----------
  Tested in
 -----------
 
- * Firefox 3.5
- * Iceweasel 3.5
- * Chromium 6.0
- * Safari
+* Firefox 3.5
+* Iceweasel 3.5
+* Chromium 6.0
+* Safari
 
 -------------
  Report bugs
@@ -73,10 +73,10 @@ https://github.com/tooxie/askani/issues
 
 Contact me:
 
- * alvaro at mourino dot net
- * http://identi.ca/tuxie
- * http://twitter.com/tuxie\_
- * https://github.com/tooxie
+* alvaro at mourino dot net
+* http://identi.ca/tuxie
+* http://twitter.com/tuxie\_
+* https://github.com/tooxie
 
 Feel free to contact me, send comments, ideas, critics. Every opinion is welcome.
 
@@ -84,10 +84,10 @@ Feel free to contact me, send comments, ideas, critics. Every opinion is welcome
  Thanks to
 -----------
 
- * My friends for all the feedback.
- * The authors of the 3rd party apps.
- * `@documentcloud`_ for the help with backbone.js.
- * You for using it.
+* My friends for all the feedback.
+* The authors of the 3rd party apps.
+* `@documentcloud`_ for the help with backbone.js.
+* You for using it.
 
 -----------
  Donations
