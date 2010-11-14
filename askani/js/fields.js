@@ -129,40 +129,31 @@ fields = {
     field_types: {
         'AutoField': {
             type: 'number',
-            validator: this.validators.is_number
         },
         'BigIntegerField': {
             type: 'number',
-            validator: this.is_number,
             validator_params: [-9223372036854775808, 9223372036854775807]
         },
         'BooleanField': {
             type: 'boolean',
-            validator: this.is_boolean
         },
         'CharField': {
             type: 'text',
-            validator: null
         },
         'CommaSeparatedIntegerField': {
             type: 'text',
-            validator: null
         },
         'DateField': {
             type: 'text',
-            validator: null
         },
         'DateTimeField': {
             type: 'text',
-            validator: null
         },
         'DecimalField': {
             type: 'number',
-            validator: this.is_number
         },
         'EmailField': {
             type: 'email',
-            validator: null
         },
         'FileField': {
         },
