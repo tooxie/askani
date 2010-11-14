@@ -136,77 +136,76 @@ $(function () {
         }
     });
 
-    var meta_options = {
-        'abstract': {
-            type: 'boolean',
-            default: false,
-            value: false
-        },
-        'app_label': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'db_table': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'db_tablespace': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'get_latest_by': {
-            type: 'choice',
-            default: '',
-            value: ''
-        },
-        'managed': {
-            type: 'boolean',
-            default: true,
-            value: true
-        },
-        'order_with_respect_to': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'ordering': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'permissions': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'proxy': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'unique_together': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'verbose_name': {
-            type: 'text',
-            default: '',
-            value: ''
-        },
-        'verbose_name_plural': {
-            type: 'text',
-            default: '',
-            value: ''
-        }
-    };
-
     window.DjangoModel = Backbone.Model.extend({
         initialize: function () {
-            var args, defaults, key;
+            var args, defaults, key, meta_options;
+            meta_options = {
+                'abstract': {
+                    type: 'boolean',
+                    default: false,
+                    value: false
+                },
+                'app_label': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'db_table': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'db_tablespace': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'get_latest_by': {
+                    type: 'choice',
+                    default: '',
+                    value: ''
+                },
+                'managed': {
+                    type: 'boolean',
+                    default: true,
+                    value: true
+                },
+                'order_with_respect_to': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'ordering': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'permissions': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'proxy': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'unique_together': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'verbose_name': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                },
+                'verbose_name_plural': {
+                    type: 'text',
+                    default: '',
+                    value: ''
+                }
+            };
             defaults = {
                 base_class: '',
                 has_meta: false,

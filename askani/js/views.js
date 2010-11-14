@@ -182,6 +182,10 @@ $(function () {
                     $('#' + this.id).closest('.model-name-template').find('.base-class').hide();
                 }
             });
+            $('a[href^="http"]').live('click', function(){
+                window.open(this.href);
+                return false;
+            });
         },
 
         render: function () {
@@ -481,7 +485,29 @@ $(function () {
         },
 
         editField: function (e) {
-            this.report(new NotImplementedError());
+            var field,
+                model = DjangoModels.get($(e.target).closest('.model').attr('id'));
+            field = model.get('fields').get($(e.target).closest('.model-field').attr('id'));
+            $.jPrompt(_.template($('#model-field-edit-template').html())({
+                field: field
+            }), {
+                context: e,
+                open: function (e) {
+                    $('#field-type').autocomplete({
+                        minLength: 2,
+                        source: fields.types
+                    });
+                },
+                resizable: true,
+                submit: function (e) {
+                    App.saveField(e);
+                },
+                width: 340
+            });
+            return false;
+        },
+
+        saveField: function (e) {
             return false;
         },
 

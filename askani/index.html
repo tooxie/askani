@@ -10,6 +10,7 @@
         <script type="text/javascript" src="js/backbone-min.js"></script>
         <script type="text/javascript" src="js/backbone-localstorage-min.js"></script>
         <script type="text/javascript" src="js/utils.js"></script>
+        <script type="text/javascript" src="js/fields.js"></script>
         <script type="text/javascript" src="js/exceptions.js"></script>
         <script type="text/javascript" src="js/models.js"></script>
         <script type="text/javascript" src="js/collections.js"></script>
@@ -70,6 +71,22 @@
             </div>
         </script>
 
+        <script type="text/template" id="model-field-edit-template">
+            <div class="model-field-edit-template-holder">
+                <div class="model-fields-edit">
+                    <div class="field even">
+                        <label for="field-name">Name:</label>
+                        <input type="text" name="field-name" id="field-name" value="<%= field.get('name') %>">
+                    </div>
+                    <div class="field">
+                        <label for="field-type">Type:</label>
+                        <input type="text" name="field-type" id="field-type" value="<%= field.get('type') %>">
+                    </div>
+                </div>
+                <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/" class="doc">Model fields documentation</a>
+            </div>
+        </script>
+
         <!-- Model method -->
         <script type="text/template" id="model-method-template">
             <div class="model-method" id="<%= method.id %>">
@@ -111,7 +128,7 @@
                                         <span class="error">No fields to choose from.</span>
                                     <% } else {%>
                                         <select id="<%= option_id %>">
-                                            <option>--- Choose ---</option>
+                                            <option value="">--- Choose ---</option>
                                             <% model.get('fields').each(function (el, i) { %>
                                                 <option value="<%= el.id %>"<% if (model.getMeta(meta) === el.id) { %> selected<% } %>><%= el.get('name') %></option>
                                             <% }); %>
