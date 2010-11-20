@@ -215,3 +215,12 @@ a.doc {
 .abstract {
     font-style:italic;
 }
+.facebook {
+    border:none;
+    bottom:10px;
+    height:25px;
+    overflow:hidden;
+    position:fixed;
+    right:10px;
+    z-index:150;
+}
