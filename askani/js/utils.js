@@ -149,7 +149,7 @@ function emSize(size) {
 }
 
 function modelToPython(model) {
-    var base_class, code, field, field_count, method, method_count, type, x;
+    var base_class, code, field, field_count, method, method_count, option, type, x;
     base_class = model.get('base_class') ? model.get('base_class') : 'models.Model';
     code = 'class ' + model.get('name') + '(' + base_class + '):\n';
     field_count = model.get('fields').size();
@@ -163,7 +163,14 @@ function modelToPython(model) {
         method = model.get('methods').at(x);
         code += '\n    def ' + method.get('name') + '(' + method.params.join(', ') + '):' + '\n        pass\n';
     }
-    if (field_count === 0 && method_count === 0) {
+    if (model.get('has_meta')) {
+        code += '\n    class Meta:\n';
+        options = model.getMeta();
+        for (option in options) {
+            code += '        ' + option + ' = "' + options[option] + '"\n';
+        }
+    }
+    if (field_count === 0 && method_count === 0 && !model.get('has_meta')) {
         code += '    pass\n';
     }
     return code;

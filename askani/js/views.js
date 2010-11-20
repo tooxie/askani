@@ -508,6 +508,31 @@ $(function () {
         },
 
         saveField: function (e) {
+            var el, field, input, model;
+            el = $(e.target);
+            model = DjangoModels.get(el.closest('.model').attr('id'));
+            field = model.get('fields').get(el.closest('.model-field').attr('id'));
+            input = $('#model-field-edit-template-holder');
+            field.save({
+                name: input.find('#field-name').val(),
+                type: input.find('#field-type').val()
+            });
+            if (fields.isKnown(field.get('name'))) {
+                $.jPrompt(_.template($('#model-field-options-template').html())({
+                    options: fields.getOptions(field.get('name'))
+                }), {
+                    context: e,
+                    resizable: true,
+                    submit: function (e) {
+                        App.saveFieldOptions(e);
+                    },
+                    width: 340
+                });
+            }
+            return false;
+        },
+
+        saveFieldOptions: function (e) {
             return false;
         },
 

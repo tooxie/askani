@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-        <title>Askani Code Generator</title>
+        <title>Askani - Django models generator</title>
         <script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
         <script type="text/javascript" src="js/json2-min.js"></script>
@@ -86,7 +86,26 @@
                         <input type="text" name="field-type" id="field-type" value="<%= field.get('type') %>">
                     </div>
                 </div>
-                <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/" class="doc">Model fields documentation</a>
+                <div id="model-field-edit-options"></div>
+                <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/" class="doc">Model fields docs</a>
+            </div>
+        </script>
+
+        <!-- Model field options -->
+        <script type="text/template" id="model-field-options-template">
+            <div class="model-field-options-template-holder">
+                <div class="model-fields-options">
+                    <% x = 0; %>
+                    <% if (options.field) { %>
+                        <% for (option in options.field) { %>
+                            <div class="model-field-option<% if (x % 2 === 0) { %> even<% } %>">
+                                <label for=""><%= option %>:</label>
+                                <input type="text" name="field-name" id="field-name" value="<%= option %>">
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+                <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/" class="doc">Model fields docs</a>
             </div>
         </script>
 
@@ -119,7 +138,7 @@
                         <% option_id = meta.replace(/_/g, '-') + '--' + model.id; %>
                         <div class="meta-option<% if (x % 2 === 0) { %> even<% } %>">
                             <label for="<%= option_id %>"><%= meta.substr(0, 1).toUpperCase() + meta.substr(1).replace(/_/g, ' ') %>:</label>
-                            <% option_type = model.get('meta_options')[meta].type; %>
+                            <% option_type = model.get('meta_options')[meta]['type']; %>
                             <div>
                                 <% if (option_type === 'boolean') { %>
                                     <label for="<%= option_id %>-t">True</label>
@@ -145,7 +164,7 @@
                         <% x += 1; %>
                     <% } %>
                 </div>
-                <a href="http://docs.djangoproject.com/en/dev/ref/models/options/" class="doc">Model Meta options documentation</a>
+                <a href="http://docs.djangoproject.com/en/dev/ref/models/options/" class="doc">Model Meta options docs</a>
             </div>
         </script>
 
