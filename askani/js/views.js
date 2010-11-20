@@ -529,6 +529,7 @@ $(function () {
                     width: 340
                 });
             }
+            this.initialize();
             return false;
         },
 

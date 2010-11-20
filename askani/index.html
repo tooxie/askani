@@ -75,7 +75,7 @@
         </script>
 
         <script type="text/template" id="model-field-edit-template">
-            <div class="model-field-edit-template-holder">
+            <div id="model-field-edit-template-holder">
                 <div class="model-fields-edit">
                     <div class="model-field-edit even">
                         <label for="field-name">Name:</label>
@@ -93,7 +93,7 @@
 
         <!-- Model field options -->
         <script type="text/template" id="model-field-options-template">
-            <div class="model-field-options-template-holder">
+            <div id="model-field-options-template-holder">
                 <div class="model-fields-options">
                     <% x = 0; %>
                     <% if (options.field) { %>
@@ -131,7 +131,7 @@
 
         <!-- Metadata -->
         <script type="text/template" id="model-meta-template">
-            <div class="model-meta-template-holder">
+            <div id="model-meta-template-holder">
                 <div class="meta-options">
                     <% x = 0; %>
                     <% for (meta in model.get('meta_options')) { %>
