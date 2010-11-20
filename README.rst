@@ -37,9 +37,10 @@ Askani helps you focus just in what's important. You don't need to remember all 
   * This may need a browser plugin to work.
 
 * Collaborative (concurrent) work.
-* Represent model relationships.
+* Represent graphically relationships between models.
 * Allow field autocomplete for multiple field choice meta options.
 * Allow global configuration.
+* Full support for field options.
 
 --------------------
  3rd party software
@@ -47,6 +48,7 @@ Askani helps you focus just in what's important. You don't need to remember all 
 
 * `jQuery`_.
 * `jQuery UI`_.
+* `JSON2`_.
 * `Underscore.js`_.
 * `Backbone.js`_.
 * `Backbone localStorage`_.
@@ -100,6 +102,7 @@ If you like the software just use it. No donations accepted.
 .. _PEP 8: http://www.python.org/dev/peps/pep-0008/
 .. _jQuery: http://jquery.com/
 .. _jQuery UI: http://jqueryui.com/
+.. _JSON2: http://www.json.org/js.html
 .. _Underscore.js: http://documentcloud.github.com/underscore/
 .. _Backbone.js: http://documentcloud.github.com/backbone/
 .. _Backbone localStorage: http://documentcloud.github.com/backbone/docs/backbone-localstorage.html
