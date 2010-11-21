@@ -11,5 +11,12 @@ $(document).ready(function () {
                 $.gaTrack(gacode);
             }
         });
+    } else {
+        stLight.options({
+            publisher:'6cbefb55-0497-4fec-b520-0d552fb726d6',
+            st_title: 'Askani - Django models generator',
+            st_url: 'http://askani.net/',
+            onhover: false
+        });
     }
 });
