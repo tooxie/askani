@@ -431,8 +431,9 @@ $(function () {
         },
 
         setMetaOptions: function (e) {
-            var model,
+            var meta, model,
                 options = {},
+                option_id,
                 val = '';
             model = DjangoModels.get($(e.target).closest('.model').attr('id'));
             for (meta in model.get('meta_options')) {
@@ -442,7 +443,7 @@ $(function () {
                     options[meta] = val ? val : '';
                 }
             }
-            $('.model-meta-template-holder input:checked').each(function () {
+            $('#model-meta-template-holder input:checked').each(function () {
                 options[this.id.substr(0, this.id.indexOf('--')).replace(/-/g, '_')] = ($(this).val() === 'true') ? true : false;
             });
             model.setMeta(options);
