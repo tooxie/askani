@@ -215,12 +215,14 @@ a.doc {
 .abstract {
     font-style:italic;
 }
-.facebook {
+#shareaskani {
     border:none;
     bottom:10px;
     height:25px;
     overflow:hidden;
     position:fixed;
-    right:10px;
-    z-index:150;
+    left:10px;
+}
+.fb_edge_widget_with_comment {
+    vertical-align:middle;
 }

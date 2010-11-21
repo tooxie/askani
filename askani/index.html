@@ -3,23 +3,34 @@
 <html>
     <head>
         <title>Askani - Django models generator</title>
-        <script type="text/javascript" src="js/jquery-1.4.3.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui-1.8.6.custom.min.js"></script>
-        <script type="text/javascript" src="js/json2-min.js"></script>
-        <script type="text/javascript" src="js/underscore-1.1.0-min.js"></script>
-        <script type="text/javascript" src="js/backbone-min.js"></script>
-        <script type="text/javascript" src="js/backbone-localstorage-min.js"></script>
-        <script type="text/javascript" src="js/utils.js"></script>
-        <script type="text/javascript" src="js/fields.js"></script>
-        <script type="text/javascript" src="js/exceptions.js"></script>
-        <script type="text/javascript" src="js/models.js"></script>
-        <script type="text/javascript" src="js/collections.js"></script>
-        <script type="text/javascript" src="js/views.js"></script>
-        <script type="text/javascript" src="js/gatrack-2.0.0.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-1.4.3.min.js"></script>
+        <script type="text/javascript" src="js/lib/jquery-ui-1.8.6.custom.min.js"></script>
+        <script type="text/javascript" src="js/lib/json2-min.js"></script>
+        <script type="text/javascript" src="js/lib/underscore-1.1.0-min.js"></script>
+        <script type="text/javascript" src="js/lib/backbone-min.js"></script>
+        <script type="text/javascript" src="js/lib/backbone-localstorage-min.js"></script>
+        <script type="text/javascript" src="js/usr/utils.js"></script>
+        <script type="text/javascript" src="js/usr/fields.js"></script>
+        <script type="text/javascript" src="js/usr/exceptions.js"></script>
+        <script type="text/javascript" src="js/usr/models.js"></script>
+        <script type="text/javascript" src="js/usr/collections.js"></script>
+        <script type="text/javascript" src="js/usr/views.js"></script>
+        <script type="text/javascript" src="js/lib/gatrack-2.0.0.js"></script>
+        <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+        <script type="text/javascript">
+            stLight.options({
+                publisher:'6cbefb55-0497-4fec-b520-0d552fb726d6',
+                st_title: 'Askani - Django models generator',
+                st_url: 'http://askani.net/',
+                onhover: false
+            });
+        </script>
         <link type="text/css" href="css/redmond/jquery-ui-1.8.6.custom.css" rel="stylesheet">
         <link type="text/css" href="css/base.css" rel="stylesheet">
     </head>
     <body>
+        <h1 class="invisible"><img src="img/logo.png" alt="Askani"></h1>
+
         <!-- Toolbar -->
         <ul id="toolbar">
             <li>
@@ -223,7 +234,17 @@
             </div>
         </script>
 
-        <iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Faskani.net%2F&amp;layout=button_count&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light&amp;height=25" scrolling="no" frameborder="0" class="facebook" allowTransparency="true"></iframe>
+        <!-- Share Askani -->
+        <div id="shareaskani">
+            <span class="st_sharethis"></span>
+            <span class="st_email"></span>
+            <span class="st_twitter"></span>
+            <span class="st_gbuzz"></span>
+            <span class="st_digg"></span>
+            <span class="st_stumbleupon"></span>
+            <script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+            <fb:like href="http://askani.net" layout="button_count" width="450"></fb:like>
+        </div>
 
         <!-- Why I don't (and you shouldn't) use XHTML:
             http://www.tangerinesmash.com/2007/html-vs-xhtml-best-tool-job/
