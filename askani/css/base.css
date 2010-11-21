@@ -2,6 +2,10 @@ body {
     font:12px/1.4em Verdana,sans-serif;
     background:#E7E7E7 url('../img/bg0.png') repeat fixed right bottom;
 }
+body h1 {
+    position:absolute;
+    left:-1000px;
+}
 a {
     text-decoration:none;
 }
