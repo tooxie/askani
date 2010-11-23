@@ -182,10 +182,6 @@ $(function () {
                     $('#' + this.id).closest('.model-name-template').find('.base-class').hide();
                 }
             });
-            $('a[href^="http"]').live('click', function(){
-                window.open(this.href);
-                return false;
-            });
         },
 
         render: function () {
@@ -493,11 +489,12 @@ $(function () {
                 field: field
             }), {
                 context: e,
-                open: function (e) {
+                open: function (event, ui) {
                     $('#field-type').autocomplete({
                         minLength: 2,
                         source: fields.types
                     });
+                    $.jDefaults.open(event, ui);
                 },
                 resizable: true,
                 submit: function (e) {

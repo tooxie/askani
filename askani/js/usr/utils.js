@@ -89,6 +89,11 @@ String.prototype.slugify = function () {
                     }
                 });
             });
+            $('a[href^="http"]').click(function () {
+                console.log('open');
+                window.open(this.href);
+                return false;
+            });
         },
         resizable: false,
         show: 'fade',
