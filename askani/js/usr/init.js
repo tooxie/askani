@@ -1,7 +1,7 @@
 $(document).ready(function () {
     var gacode;
     host = window.location.hostname;
-    if (host !== 'askani.net' || host !== 'www.askani.net') {
+    if (host !== 'askani.net' && host !== 'www.askani.net') {
         // Share
         $('#shareaskani').remove();
 
