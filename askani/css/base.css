@@ -230,3 +230,11 @@ a.doc {
 .fb_edge_widget_with_comment {
     vertical-align:middle;
 }
+#stats {
+    position:fixed;
+    bottom:10px;
+    right:25px;
+    display:block;
+    width:45px;
+    height:45px;
+}
