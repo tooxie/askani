@@ -27,7 +27,7 @@ Askani helps you focus just in what's important. You don't need to remember all 
 * Optional Google Analytics tracking.
 
 -----------
- TODO list
+ TO-DO list
 -----------
 
 * Export and import project.
@@ -41,6 +41,14 @@ Askani helps you focus just in what's important. You don't need to remember all 
 * Allow field autocomplete for multiple field choice meta options.
 * Allow global configuration.
 * Full support for field options.
+* Usability improvements
+
+  * Graphically show which model's meta options is being edited.
+  * Add "edit name", "edit type", "edit options" and "delete" to fields in a usable way.
+  * Make clear which fields have customized options.
+
+* Support for app modelling.
+* Conquer the world >=)
 
 --------------------
  3rd party software
