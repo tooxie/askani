@@ -89,11 +89,6 @@ String.prototype.slugify = function () {
                     }
                 });
             });
-            $('a[href^="http"]').click(function () {
-                console.log('open');
-                window.open(this.href);
-                return false;
-            });
         },
         resizable: false,
         show: 'fade',
@@ -154,7 +149,7 @@ function emSize(size) {
 }
 
 function modelToPython(model) {
-    var base_class, code, field, field_count, method, method_count, option, type, x;
+    var base_class, code, field, field_count, method, method_count, option, options, type, x;
     base_class = model.get('base_class') ? model.get('base_class') : 'models.Model';
     code = 'class ' + model.get('name') + '(' + base_class + '):\n';
     field_count = model.get('fields').size();
