@@ -42,7 +42,7 @@ a:hover {
 }
 .ui-state-error, .ui-state-highlight {
     margin:0.7em;
-    padding:0 0.7em;
+    padding:1px 0.7em;
 }
 span.error {
     color:red;
@@ -106,7 +106,7 @@ span.error {
     font-size:0.8em;
 }
 .model-field, .model-method {
-    padding:0 3px;
+    padding:1px 3px;
     overflow:auto;
     cursor:move;
 }
@@ -134,7 +134,7 @@ span.error {
 .model-fields, .model-methods {
     font-size:0.9em;
     text-align:left;
-    padding:0 0.5em 0.5em;
+    padding:1px 0.5em 0.5em;
 }
 .model-fields {
     border-bottom:1px solid gray;
