@@ -279,10 +279,11 @@ $(function () {
 
         setMeta: function (options) {
             var has_meta = false,
-                meta = this.get('meta_options');
+                meta = this.get('meta_options'),
+                opt;
             for (opt in options) {
-                meta[opt]['value'] = options[opt];
-                if (meta[opt]['value'] !== meta[opt]['default']) {
+                meta[opt].value = options[opt];
+                if (meta[opt].value !== meta[opt]['default']) {
                     has_meta = true;
                 }
             }
@@ -297,14 +298,14 @@ $(function () {
                 o,
                 options = this.get('meta_options');
             if (key) {
-                return options[key]['value'];
+                return options[key].value;
             }
             for (o in options) {
-                if (options[o]['value'] !== options[o]['default']) {
-                    if (options[o]['type'] === 'choice') {
-                        items[o] = this.get('fields').get(options[o]['value']).get('name');
+                if (options[o].value !== options[o]['default']) {
+                    if (options[o].type === 'choice') {
+                        items[o] = this.get('fields').get(options[o].value).get('name');
                     } else {
-                        items[o] = options[o]['value'];
+                        items[o] = options[o].value;
                     }
                 }
             }
