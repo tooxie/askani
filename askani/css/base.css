@@ -77,6 +77,7 @@ span.error {
 .model-footer {
     background-image:url('../img/socket.png');
     bottom:3px;
+    cursor:move;
     height:14px;
     position:absolute;
     right:3px;

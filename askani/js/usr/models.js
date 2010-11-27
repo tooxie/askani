@@ -279,14 +279,14 @@ $(function () {
 
         setMeta: function (options) {
             var has_meta = false,
-                meta = this.get('meta_options'),
-                opt;
-            for (opt in options) {
-                meta[opt].value = options[opt];
-                if (meta[opt].value !== meta[opt]['default']) {
+                key,
+                meta = this.get('meta_options');
+            $.each(options, function (key, value) {
+                meta[key].value = options[key];
+                if (meta[key].value !== meta[key]['default']) {
                     has_meta = true;
                 }
-            }
+            });
             this.save({
                 meta_options: meta,
                 has_meta: has_meta
@@ -318,7 +318,7 @@ $(function () {
 
         isEqual: function (model) {
             if (typeof model === 'string') {
-                return (this.get('name') === model.slugify());
+                return (this.get('name') === model.toCamelCase());
             }
             return (this.get('name') === model.get('name'));
         },

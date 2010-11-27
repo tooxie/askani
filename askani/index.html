@@ -6,8 +6,8 @@
         <script type="text/javascript" src="js/lib/jquery-1.4.3.min.js"></script>
         <script type="text/javascript" src="js/lib/jquery-ui-1.8.6.custom.min.js"></script>
         <script type="text/javascript" src="js/lib/json2-min.js"></script>
-        <script type="text/javascript" src="js/lib/underscore-1.1.0-min.js"></script>
-        <script type="text/javascript" src="js/lib/backbone-min.js"></script>
+        <script type="text/javascript" src="js/lib/underscore.js"></script>
+        <script type="text/javascript" src="js/lib/backbone.js"></script>
         <script type="text/javascript" src="js/lib/backbone-localstorage-min.js"></script>
         <script type="text/javascript" src="js/lib/gatrack-2.0.0.js"></script>
         <script type="text/javascript" src="js/usr/utils.js"></script>
@@ -54,28 +54,24 @@
 
         <!-- Model -->
         <script type="text/template" id="model-template">
-            <div class="model ui-draggable" id="<%= model.id %>" style="position:absolute;left:<%= model.get('x') %>;top:<%= model.get('y') %>;z-index:<%= model.get('z') %>;">
-                <div class="model-name">
-                    <a href="#" class="model-kill" title="Kill model"></a>
-                    <span class="name<% if (model.isAbstract()) { %> abstract<% } %>" title="Double click to edit"><%= model.get('name') %></span>
-                    <% if (model.get('base_class')) { %><br><span class="base-class" title="Double click to edit">(<%= model.get('base_class') %>)</span><% } %>
-                    <a href="#" class="model-meta<% if (model.get('has_meta')) { %> has-meta<% } else { %>" title="No Meta options<% } %>"></a>
-                </div>
-                <input type="text" class="new-model-field blur" name="attr-<%= model.id %>" value="New field" maxlength="50">
-                <div class="model-fields"></div>
-                <input type="text" class="new-model-method blur" id="meth-<%= model.id %>" value="New method" maxlength="50">
-                <div class="model-methods"></div>
-                <div class="model-footer"></div>
+            <div class="model-name">
+                <a href="#" class="model-kill" title="Kill model"></a>
+                <span class="name<% if (model.isAbstract()) { %> abstract<% } %>" title="Double click to edit"><%= model.get('name') %></span>
+                <% if (model.get('base_class')) { %><br><span class="base-class" title="Double click to edit">(<%= model.get('base_class') %>)</span><% } %>
+                <a href="#" class="model-meta<% if (model.get('has_meta')) { %> has-meta<% } else { %>" title="No Meta options<% } %>"></a>
             </div>
+            <input type="text" class="new-model-field blur" name="attr-<%= model.id %>" value="New field" maxlength="50">
+            <div class="model-fields"></div>
+            <input type="text" class="new-model-method blur" id="meth-<%= model.id %>" value="New method" maxlength="50">
+            <div class="model-methods"></div>
+            <div class="model-footer"></div>
         </script>
 
         <!-- Model field -->
         <script type="text/template" id="model-field-template">
-            <div class="model-field" id="<%= field.id %>">
-                <span class="type" title="Double click to edit"><%= field.get('type') %></span>
-                <span class="name" title="Double click to edit"><%= field.get('name') %></span>
-                <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
-            </div>
+            <span class="type" title="Double click to edit"><%= field.get('type') %></span>
+            <span class="name" title="Double click to edit"><%= field.get('name') %></span>
+            <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
         </script>
 
         <script type="text/template" id="model-field-edit-template">
@@ -115,10 +111,8 @@
 
         <!-- Model method -->
         <script type="text/template" id="model-method-template">
-            <div class="model-method" id="<%= method.id %>">
-                <span class="signature" title="Double click to edit"><%= method.get('name') %>(<%= method.get('params').join(', ') %>)</span>
-                <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
-            </div>
+            <span class="signature" title="Double click to edit"><%= method.get('name') %>(<%= method.get('params').join(', ') %>)</span>
+            <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
         </script>
 
         <!-- Method signature -->

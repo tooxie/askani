@@ -5,7 +5,9 @@
 //    * Opciones específicas.
 //    * Y un link a la documentación del campo y de cada opción.
 // 3) Si no es conocido muestro un campo donde ingresa las opciones a mano.
-var fields = {
+/*global $ */
+var f,
+    Fields = {
     validators: {
         is_number: function (n, params) {
             if (typeof n !== 'number') {
@@ -27,23 +29,22 @@ var fields = {
         }
     },
     isKnown: function (field) {
-        for (f in this.types) {
+        $.each(this.types, function (i, f) {
             if (f === field) {
                 return true;
             }
-        }
+        });
         return false;
     },
     getOptions: function (field) {
-        for (f in this.field_options) {
-            if (f === field) {
-                console.log(f);
+        $.each(this.field_options, function (key, value) {
+            if (key === field) {
                 return {
-                    field: this.field_options[f],
+                    field: this.field_options[key],
                     common: this.common_options
-                }
+                };
             }
-        }
+        });
     },
     common_options: {
         'null': {
