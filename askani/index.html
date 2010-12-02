@@ -2,23 +2,34 @@
         "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-        <title>Askani - Django models generator</title>
-        <script type="text/javascript" src="js/lib/jquery-1.4.3.min.js"></script>
-        <script type="text/javascript" src="js/lib/jquery-ui-1.8.6.custom.min.js"></script>
-        <script type="text/javascript" src="js/lib/json2-min.js"></script>
+        <title>Askani - Django projects generator</title>
+
+        <!-- 3rd party apps -->
+        <script type="text/javascript" src="js/lib/jquery-1.4.4.js"></script>
+        <script type="text/javascript" src="js/lib/min/jquery-ui-1.8.6.js"></script>
+        <script type="text/javascript" src="js/lib/json2.js"></script>
         <script type="text/javascript" src="js/lib/underscore.js"></script>
         <script type="text/javascript" src="js/lib/backbone.js"></script>
-        <script type="text/javascript" src="js/lib/backbone-localstorage-min.js"></script>
+        <script type="text/javascript" src="js/lib/backbone-localstorage.js"></script>
         <script type="text/javascript" src="js/lib/gatrack-2.0.0.js"></script>
-        <script type="text/javascript" src="js/usr/utils.js"></script>
-        <script type="text/javascript" src="js/usr/fields.js"></script>
-        <script type="text/javascript" src="js/usr/exceptions.js"></script>
-        <script type="text/javascript" src="js/usr/models.js"></script>
-        <script type="text/javascript" src="js/usr/collections.js"></script>
-        <script type="text/javascript" src="js/usr/views.js"></script>
-        <script type="text/javascript" src="js/usr/init.js"></script>
+        <!-- <script type="text/javascript" src="js/lib/jquery.simpletip-1.3.1.js"></script> -->
+        <script type="text/javascript" src="js/lib/jquery.tipsy.js"></script>
         <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
         <link type="text/css" href="css/redmond/jquery-ui-1.8.6.custom.css" rel="stylesheet">
+        <link type="text/css" href="css/tipsy.css" rel="stylesheet">
+
+        <!-- Askani code -->
+        <script type="text/javascript" src="js/usr/utils.js"></script>
+        <script type="text/javascript" src="js/usr/base.js"></script>
+        <script type="text/javascript" src="js/usr/fields.js"></script>
+        <script type="text/javascript" src="js/usr/exceptions.js"></script>
+        <script type="text/javascript" src="js/usr/models/mmodels.js"></script>
+        <script type="text/javascript" src="js/usr/models/mapps.js"></script>
+        <script type="text/javascript" src="js/usr/collections/cmodels.js"></script>
+        <script type="text/javascript" src="js/usr/collections/capps.js"></script>
+        <script type="text/javascript" src="js/usr/views/vapps.js"></script>
+        <script type="text/javascript" src="js/usr/views/vaskani.js"></script>
+        <script type="text/javascript" src="js/usr/init.js"></script>
         <link type="text/css" href="css/base.css" rel="stylesheet">
     </head>
     <body>
@@ -27,18 +38,21 @@
         <!-- Toolbar -->
         <ul id="toolbar">
             <li>
-                <a href="#" id="new-model">[+] New model</a>
+                <a href="#" id="app-new" class="object-new">[+] New app</a>
+            </li>
+            <!--
+            <li>
+                <a href="#" id="new-model" class="object-new">[+] New model</a>
             </li>
             <li>
                 <a href="#" id="to-python">[~] To python</a>
             </li>
-            <!--
             <li>
                 <a href="#" id="to-json">[:] To JSON</a>
             </li>
             -->
             <li>
-                <a href="#" id="kill-all">[!] Kill all</a>
+                <a href="#" id="kill-all" class="invisible">[!] Kill all</a>
             </li>
         </ul>
 
@@ -47,10 +61,17 @@
         <!-- Messages -->
         <div id="messages"></div>
 
-        <!-- Workspace -->
-        <div id="workspace"></div>
-
         <!-- Templates -->
+
+        <!-- App -->
+        <script type="text/template" id="app-template">
+            <% if (object.modelsCount()) { %>
+                <span class="app-models" title="App's models"><%= object.modelsCount() %></span>
+            <% } %>
+            <div class="app-name">
+                <%= object.get('name') %>
+            </div>
+        </script>
 
         <!-- Model -->
         <script type="text/template" id="model-template">
@@ -74,6 +95,51 @@
             <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
         </script>
 
+        <!-- Model method -->
+        <script type="text/template" id="model-method-template">
+            <span class="signature" title="Double click to edit"><%= method.get('name') %>(<%= method.get('params').join(', ') %>)</span>
+            <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
+        </script>
+
+        <!-- jPrompt -->
+
+        <!-- App name -->
+        <script type="text/template" id="app-name-template">
+            <div class="app-name-template" id="app-name-template-holder">
+                <div class="field">
+                    <label for="app-name-input"><%= label %>:</label>
+                    <p>
+                        <input type="text" id="app-name-input" name="app-name-input" value="<%= app %>">
+                    </p>
+                </div>
+            </div>
+        </script>
+
+        <!-- Model name -->
+        <script type="text/template" id="model-name-template">
+            <div class="model-name-template" id="model-name-template-holder">
+                <div class="field">
+                    <label for="model-name-input"><%= label %>:</label>
+                    <p>
+                        <input type="text" id="model-name-input" name="model-name-input" value="<%= name %>">
+                    </p>
+                </div>
+                <div class="field">
+                    <label for="model-name-overwrite-inheritance">Do not inherit from db.models.Model:</label>
+                    <input type="checkbox" class="checkbox" id="model-name-overwrite-inheritance" name="model-name-overwrite-inheritance"<% if (base_class) { %> checked<% } %>>
+                </div>
+                <div class="field">
+                    <div class="base-class<% if (!base_class) { %> invisible<% } %>">
+                        <label for="model-base-class">Inherit from:</label>
+                        <p>
+                            <input type="text" id="model-base-class" name="model-base-class" value="<%= base_class %>">
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <!-- Model field name and type -->
         <script type="text/template" id="model-field-edit-template">
             <div id="model-field-edit-template-holder">
                 <div class="model-fields-edit">
@@ -107,12 +173,6 @@
                 </div>
                 <a href="http://docs.djangoproject.com/en/dev/ref/models/fields/" class="doc">Model fields docs</a>
             </div>
-        </script>
-
-        <!-- Model method -->
-        <script type="text/template" id="model-method-template">
-            <span class="signature" title="Double click to edit"><%= method.get('name') %>(<%= method.get('params').join(', ') %>)</span>
-            <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
         </script>
 
         <!-- Method signature -->
@@ -166,30 +226,6 @@
             </div>
         </script>
 
-        <!-- Model name -->
-        <script type="text/template" id="model-name-template">
-            <div class="model-name-template" id="model-name-template-holder">
-                <div class="field">
-                    <label for="model-name-input"><%= label %>:</label>
-                    <p>
-                        <input type="text" id="model-name-input" name="model-name-input" value="<%= name %>">
-                    </p>
-                </div>
-                <div class="field">
-                    <label for="model-name-overwrite-inheritance">Do not inherit from db.models.Model:</label>
-                    <input type="checkbox" class="checkbox" id="model-name-overwrite-inheritance" name="model-name-overwrite-inheritance"<% if (base_class) { %> checked<% } %>>
-                </div>
-                <div class="field">
-                    <div class="base-class<% if (!base_class) { %> invisible<% } %>">
-                        <label for="model-base-class">Inherit from:</label>
-                        <p>
-                            <input type="text" id="model-base-class" name="model-base-class" value="<%= base_class %>">
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </script>
-
         <!-- Warnings -->
         <script type="text-template" id="warning-template">
             <div class="ui-widget">
@@ -220,6 +256,10 @@
                 <textarea id="code" cols="80" rows="20"><%= code %></textarea>
             </div>
         </script>
+
+        <div id="start-here" class="invisible">
+            Start here
+        </div>
 
         <!-- Share Askani -->
         <div id="shareaskani">

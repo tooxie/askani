@@ -77,6 +77,9 @@ String.prototype.slugify = function () {
         return $('#' + id).html('<p>' + message + '</p>');
     };
     $.jDefaults = {
+        close: function (event, ui) {
+            $('input:focus').blur();
+        },
         height: 'auto',
         hide: 'fade',
         modal: true,
@@ -148,7 +151,7 @@ function emSize(size) {
     return $('#emsizehelper').width();
 }
 
-function modelToPython(model) {
+function toPython(model) {
     var base_class, code, field, field_count, method, method_count, option, options, type, x;
     base_class = model.get('base_class') ? model.get('base_class') : 'models.Model';
     code = 'class ' + model.get('name') + '(' + base_class + '):\n';
@@ -166,9 +169,9 @@ function modelToPython(model) {
     if (model.get('has_meta')) {
         code += '\n    class Meta:\n';
         options = model.getMeta();
-        for (option in options) {
-            code += '        ' + option + ' = "' + options[option] + '"\n';
-        }
+        $.each(options, function (key, value) {
+            code += '        ' + key + ' = "' + value + '"\n';
+        });
     }
     if (field_count === 0 && method_count === 0 && !model.get('has_meta')) {
         code += '    pass\n';
@@ -176,6 +179,7 @@ function modelToPython(model) {
     return code;
 }
 
+/*
 function destroyTheWorld() {
     var djml, x;
     djml = DjangoModels.length;
@@ -200,3 +204,4 @@ function getDeployCoords(x, y) {
     }
     return [x, y];
 }
+*/

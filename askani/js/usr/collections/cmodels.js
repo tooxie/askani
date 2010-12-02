@@ -13,19 +13,69 @@
 */
 /*global
          $,
+         AskaniCollection,
          Backbone,
          DjangoModel,
-         DjangoModelExistsError,
          DjangoModelField,
-         DjangoModelFieldExistsError,
          DjangoModelList,
          DjangoModelMethod,
-         DjangoModelMethodExistsError,
-         EmptyNameError,
+         Exceptions,
          Store,
          window
 */
 $(function () {
+    window.DjangoModelList = Backbone.Collection.extend({
+        model: DjangoModel,
+
+        localStorage: new Store("djangoapps"),
+
+        create: function (attributes, options) {
+            var l = this.length,
+                x;
+            options = options ? options : {};
+            if (attributes.name === null) {
+                return false;
+            }
+            for (x = 0; x < l; x += 1) {
+                if (this.at(x).isEqual(attributes.name)) {
+                    throw new Exceptions.DjangoModelExistsError(attributes);
+                }
+            }
+            return Backbone.Collection.prototype.create.call(this, $.extend({
+                z: this.nextPosition()
+            }, attributes), $.extend({
+                success: this.model.prototype.post_save
+            }, options));
+        },
+
+        remove: function (options) {
+            // Backbone should implement a mechanism to keep every object in
+            // the Collection sorted incrementally.
+            Backbone.Collection.prototype.remove.call(this, options);
+            this.reZ();
+            return this;
+        },
+
+        // Re-calculates every z.
+        reZ: function () {
+            this.each(function (el, i, list) {
+                el.set({z: i + 1});
+                el.save();
+            });
+        },
+
+        nextPosition: function () {
+            if (!this.length) {
+                return 1;
+            }
+            return this.last().get('z') + 1;
+        },
+
+        comparator: function (model) {
+            return model.get('z');
+        }
+    });
+
     window.DjangoModelFieldList = Backbone.Collection.extend({
         model: DjangoModelField,
 
@@ -44,7 +94,7 @@ $(function () {
             }
             for (x = 0; x < this.size(); x += 1) {
                 if (this.at(x).isEqual(attributes.name)) {
-                    throw new DjangoModelFieldExistsError(attributes);
+                    throw new Exceptions.DjangoModelFieldExistsError(attributes);
                 }
             }
             return Backbone.Collection.prototype.create.call(this, $.extend({
@@ -82,7 +132,7 @@ $(function () {
             }
             for (x = 0; x < this.size(); x += 1) {
                 if (this.at(x).isEqual(attributes.name)) {
-                    throw new DjangoModelMethodExistsError(attributes);
+                    throw new Exceptions.DjangoModelMethodExistsError(attributes);
                 }
             }
             return Backbone.Collection.prototype.create.call(this, $.extend({
@@ -102,56 +152,10 @@ $(function () {
         }
     });
 
-    window.DjangoModelList = Backbone.Collection.extend({
-        model: DjangoModel,
+    window.DjangoModelList = AskaniCollection.extend({
+        model: DjangoModel
 
-        localStorage: new Store("djangomodels"),
-
-        create: function (attributes, options) {
-            var l = this.length,
-                x;
-            options = options ? options : {};
-            if (attributes.name === null) {
-                return false;
-            }
-            for (x = 0; x < l; x += 1) {
-                if (this.at(x).isEqual(attributes.name)) {
-                    throw new DjangoModelExistsError(attributes);
-                }
-            }
-            return Backbone.Collection.prototype.create.call(this, $.extend({
-                z: this.nextPosition()
-            }, attributes), $.extend({
-                success: this.model.prototype.post_save
-            }, options));
-        },
-
-        remove: function (options) {
-            // Backbone should implement a mechanism to keep every object in
-            // the Collection sorted incrementally.
-            Backbone.Collection.prototype.remove.call(this, options);
-            this.reZ();
-            return this;
-        },
-
-        // Re-calculates every z.
-        reZ: function () {
-            this.each(function (el, i, list) {
-                el.set({z: i + 1});
-                el.save();
-            });
-        },
-
-        nextPosition: function () {
-            if (!this.length) {
-                return 1;
-            }
-            return this.last().get('z') + 1;
-        },
-
-        comparator: function (model) {
-            return model.get('z');
-        }
+        // localStorage: new Store("djangomodels"),
     });
-    window.DjangoModels = new DjangoModelList();
+    // window.DjangoModels = new DjangoModelList();
 });

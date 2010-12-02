@@ -41,4 +41,21 @@ $(document).ready(function () {
         window.open(this.href);
         return false;
     });
+    if (DjangoApps.length) {
+        $('#kill-all').removeClass('invisible');
+    } else {
+        $('#start-here').delay(1000).fadeIn(2000);
+    }
+    DjangoApps.bind('add', function () {
+        $('#kill-all').fadeIn(2000);
+    });
+    $('#app-new').click(function (e) {
+        $('#start-here').fadeOut(2000);
+        App.create(e);
+        return false;
+    });
+    $('#kill-all').click(function () {
+        App.destroyTheWorld();
+        return false;
+    });
 });

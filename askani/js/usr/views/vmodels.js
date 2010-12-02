@@ -17,17 +17,16 @@
          App,
          AppView,
          Backbone,
+         DjangoApps,
          DjangoModels,
          DjangoModelFieldView,
          DjangoModelMethodView,
          DjangoModelView,
          emSize,
+         Exceptions,
          ExceptionView,
          Fields,
          getDeployCoords,
-         InvalidSignatureError,
-         NothingToKillError,
-         NotImplementedError,
          window
 */
 
@@ -41,7 +40,7 @@ $(function () {
 
         events: {
             'click .model-method-kill': 'destroyMethod',
-            'dblclick .signature': 'editMethod',
+            'dblclick .signature': 'editMethod'
         },
 
         initialize: function (attr) {
@@ -73,7 +72,7 @@ $(function () {
             signature = $('#method-signature-template-holder').find('#method-signature-input').val();
             match = signature.match(/^[\w_]+\([\w,\s\*]+\)$/g);
             if (match === null || (match.length !== 1 && match[0] !== signature)) {
-                this.report(new InvalidSignatureError());
+                this.report(new Exceptions.InvalidSignatureError());
                 return false;
             }
             model = DjangoModels.get($(e.target).closest('.model').attr('id'));
@@ -113,7 +112,7 @@ $(function () {
 
         events: {
             'click .model-field-kill': 'destroyField',
-            'dblclick .model-field .type, .model-field .name': 'editField',
+            'dblclick .model-field .type, .model-field .name': 'editField'
         },
 
         initialize: function (attr) {
@@ -141,7 +140,13 @@ $(function () {
                     params.view.model.destroy();
                     params.fields.remove(params.field);
                     $(params.view.el).remove();
-            }, context: {field: field, fields: fields, model: model, view: this}});
+                }, context: {
+                    field: field,
+                    fields: fields,
+                    model: model,
+                    view: this
+                }
+            });
             return false;
         },
 
@@ -503,12 +508,13 @@ $(function () {
             'click #new-model': 'promptModelName',
             'click .model': 'raiseModel',
             'click .model-kill': 'destroyModel',
-            'dragstop .model': 'saveModelCoords',
+            'dragstop .model': 'saveModelCoords'
         },
 
         initialize: function () {
             _.bindAll(this, 'render');
-            DjangoModels.fetch();
+            DjangoApps.fetch();
+            return;
             this.render();
             $('input.checkbox').live('change', function () {
                 var check, check_toggle;
@@ -596,7 +602,7 @@ $(function () {
                 models_count = DjangoModels.length,
                 x;
             if (models_count === 0) {
-                this.report(new NothingToKillError());
+                this.report(new Exceptions.NothingToKillError());
                 return false;
             }
             $.jConfirm('Kill them all?', {submit: function () {
@@ -705,19 +711,19 @@ $(function () {
         },
 
         renderField: function (field) {
-            view = new DjangoModelFieldView({
+            var view = new DjangoModelFieldView({
                 field: field
             });
             return view.render().el;
         },
 
         renderMethod: function (method) {
-            view = new DjangoModelMethodView({
+            var view = new DjangoModelMethodView({
                 method: method
             });
             return view.render().el;
         }
     });
 
-    window.App = new AppView();
+    // window.App = new AppView();
 });

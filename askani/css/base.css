@@ -20,6 +20,20 @@ a:hover {
     /* color:#FFE761; */
     color:black;
 }
+#workspace {
+    position:relative;
+}
+#start-here {
+    color:white;
+    width:120px;
+    height:50px;
+    line-height:55px;
+    text-align:center;
+    position:absolute;
+    top:30px;
+    left:10px;
+    background:transparent url('../img/tooltip.png') 0 0 no-repeat;
+}
 .ui-dialog-content a {
     color:blue;
 }
@@ -63,16 +77,35 @@ span.error {
 .ui-draggable-dragging {
     border:1px solid #5488BB;
 }
-.model {
+.object {
     -moz-border-radius:5px;
     background-color:white;
     border-radius:5px;
     float:left;
-    margin:2.5em 0 0 20px;
-    min-height:180px;
     min-width:180px;
-    padding-bottom:1em;
+    position:absolute;
     text-align:center;
+}
+.app {
+    color:gray;
+    cursor:move;
+}
+.app-name {
+    font-size:3em;
+    font-weight:bold;
+    height:100%;
+    margin:1em;
+    position:relative;
+}
+.app-models {
+    cursor:pointer;
+    position:absolute;
+    right:10px;
+    top:5px;
+}
+.model {
+    min-height:180px;
+    padding-bottom:1em;
 }
 .model-footer {
     background-image:url('../img/socket.png');
@@ -98,6 +131,9 @@ span.error {
     height:17px;
     margin-right:0.3em;
     width:17px;
+}
+.model-name .model-kill:hover {
+    background-position: 0 -17px;
 }
 .model-field .type, .model-field .name {
     float:left;
@@ -128,9 +164,6 @@ span.error {
 }
 .model .child-kill:hover {
     background:transparent url('../img/child-kill-hover.png') 50% 50% no-repeat;
-}
-.model-name .model-kill:hover {
-    background-position: 0 -17px;
 }
 .model-fields, .model-methods {
     font-size:0.9em;

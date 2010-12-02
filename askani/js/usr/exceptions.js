@@ -16,64 +16,92 @@
          _,
          Backbone,
          Exception,
+         Exceptions,
          window
 */
 $(function () {
     window.Exception = Backbone.Model.extend({
         code: 1,
-        message: ''
+        message: 'Error'
     });
 
-    window.NotImplementedError = Backbone.Model.extend({
-        code: null,
-        message: 'Not implemented :('
-    });
+    window.Exceptions = {
+        NotImplementedError: Exception.extend({
+            code: null,
+            message: 'Not implemented =('
+        }),
 
-    window.DjangoModelExistsError = Exception.extend({
-        code: 2,
-        message: 'Model exists'
-    });
+        DjangoModelExistsError: Exception.extend({
+            code: 2,
+            message: 'Model exists'
+        }),
 
-    window.EmptyNameError = Exception.extend({
-        code: 3,
-        message: 'Name cannot be empty'
-    });
+        EmptyNameError: Exception.extend({
+            code: 3,
+            message: 'Name cannot be empty'
+        }),
 
-    window.DjangoModelFieldExistsError = Exception.extend({
-        code: 4,
-        message: 'Model field exists'
-    });
+        DjangoModelFieldExistsError: Exception.extend({
+            code: 4,
+            message: 'Model field exists'
+        }),
 
-    window.DjangoModelMethodExistsError = Exception.extend({
-        code: 4,
-        message: 'Model method exists'
-    });
+        DjangoModelMethodExistsError: Exception.extend({
+            code: 4,
+            message: 'Model method exists'
+        }),
 
-    window.NothingToKillError = Exception.extend({
-        code: 5,
-        message: 'Nothing to kill :('
-    });
+        NothingToKillError: Exception.extend({
+            code: 5,
+            message: 'Nothing to kill =('
+        }),
 
-    window.InvalidSignatureError = Exception.extend({
-        code: 6,
-        message: 'Invalid signature'
-    });
+        InvalidSignatureError: Exception.extend({
+            code: 6,
+            message: 'Invalid signature'
+        }),
 
-    window.InvalidParametersError = Exception.extend({
-        code: 7,
-        message: 'Invalid parameters'
-    });
+        InvalidParametersError: Exception.extend({
+            code: 7,
+            message: 'Invalid parameters'
+        }),
 
-    window.ExceptionView = Backbone.View.extend({
+        InitializationError: Exception.extend({
+            code: 8,
+            message: 'Error configuring object'
+        }),
 
-        tagName: 'div',
+        DjangoAppExistsError: Exception.extend({
+            code: 9,
+            message: 'App already exists'
+        }),
 
-        template: _.template($('#error-template').html()),
+        AssertionError: Exception.extend({
+            code: 10,
+            message: 'Assertion error'
+        }),
 
-        render: function () {
-            return this.template({message: this.model.message, code: this.model.code});
-        }
-    });
+        ModelExists: Exception.extend({
+            code: 11,
+            message: 'Object exists',
+            initialize: function (attr) {
+                if (attr) {
+                    this.message = 'Model "' + attr.model + '" exists';
+                }
+            }
+        }),
+
+        View: Backbone.View.extend({
+            tagName: 'div',
+
+            template: _.template($('#error-template').html()),
+
+            render: function () {
+                return this.template({message: this.model.message, code: this.model.code});
+            }
+        })
+    };
+
 
     window.WarningView = Backbone.View.extend({
 
@@ -86,3 +114,19 @@ $(function () {
         }
     });
 });
+
+function AssertException(message) {
+    this.message = message;
+}
+
+AssertException.prototype.toString = function () {
+    return 'AssertException: ' + this.message;
+};
+
+function assert(expression, message) {
+    if (!expression) {
+        throw new Exceptions.AssertionError({
+            message: message
+        });
+    }
+}

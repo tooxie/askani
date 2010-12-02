@@ -11,21 +11,22 @@
          undef: true,
          white: true
 */
-/*global $,
+/*global
+         $,
          Backbone,
          DjangoModelFieldList,
          DjangoModelMetadata,
          DjangoModelMethodList,
-         EmptyNameError,
-         InvalidParametersError,
-         modelToPython,
+         Exceptions,
          window
 */
 
 $(function () {
     window.DjangoModelField = Backbone.Model.extend({
         // name: '',
+
         type: 'CharField',
+
         position: 1,
 
         initialize: function () {
@@ -42,7 +43,7 @@ $(function () {
                 if (typeof attributes.name === 'string') {
                     attributes.name = attributes.name.slugify();
                     if (attributes.name === '') {
-                        throw new EmptyNameError();
+                        throw new Exceptions.EmptyNameError();
                     }
                 }
             }
@@ -59,7 +60,9 @@ $(function () {
 
     window.DjangoModelMethod = Backbone.Model.extend({
         // name: '',
+
         params: ['self'],
+
         position: 1,
 
         initialize: function () {
@@ -76,7 +79,7 @@ $(function () {
                 if (typeof attributes.name === 'string') {
                     attributes.name = attributes.name.slugify();
                     if (attributes.name === '') {
-                        throw new EmptyNameError();
+                        throw new Exceptions.EmptyNameError();
                     }
                 }
                 if (attributes.params) {
@@ -101,19 +104,19 @@ $(function () {
                 params[x] = params[x].slugify();
                 for (y = 0; y < names.length; y += 1) {
                     if (params[x] === names[y]) {
-                        throw new InvalidParametersError();
+                        throw new Exceptions.InvalidParametersError();
                     }
                 }
                 names[names.length] = params[x];
                 if (ftc === '**') {
                     if (x + 1 !== l) {
-                        throw new InvalidParametersError();
+                        throw new Exceptions.InvalidParametersError();
                     }
                     params[x] = '**' + params[x];
                     kw = true;
                 } else {
                     if (k || kw) {
-                        throw new InvalidParametersError();
+                        throw new Exceptions.InvalidParametersError();
                     }
                     if (fc === '*') {
                         params[x] = '*' + params[x];
@@ -209,11 +212,7 @@ $(function () {
             defaults = {
                 base_class: '',
                 has_meta: false,
-                meta_options: meta_options,
-                name: '',
-                x: 0,
-                y: 0,
-                z: 1
+                meta_options: meta_options
             };
             for (key in defaults) {
                 if (!this.get(key)) {
@@ -251,35 +250,8 @@ $(function () {
             response.initMethods(response);
         },
 
-        set: function (attributes, options) {
-            if (typeof attributes !== 'undefined') {
-                if (attributes.name !== null && typeof attributes.name !== 'undefined') {
-                    attributes.name = this.sanitizeName(attributes.name);
-                }
-            }
-            return Backbone.Model.prototype.set.call(this, attributes, options);
-        },
-
-        sanitizeName: function (name) {
-            name = name.toCamelCase();
-            if (!name) {
-                throw new EmptyNameError();
-            }
-            return name;
-        },
-
-        setPosition: function (x, y) {
-            x = (typeof x === "string") ? Number(x.replace(/[px]/g, '')) : x;
-            y = (typeof y === "string") ? Number(y.replace(/[px]/g, '')) : y;
-            this.set({
-                x: (x > 0) ? x : 0,
-                y: (y > 0) ? y : 0
-            });
-        },
-
         setMeta: function (options) {
             var has_meta = false,
-                key,
                 meta = this.get('meta_options');
             $.each(options, function (key, value) {
                 meta[key].value = options[key];
@@ -314,17 +286,6 @@ $(function () {
 
         isAbstract: function () {
             return this.getMeta('abstract') === true;
-        },
-
-        isEqual: function (model) {
-            if (typeof model === 'string') {
-                return (this.get('name') === model.toCamelCase());
-            }
-            return (this.get('name') === model.get('name'));
-        },
-
-        toPython: function () {
-            return modelToPython(this);
         }
     });
 });
