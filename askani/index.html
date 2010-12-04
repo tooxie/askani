@@ -120,9 +120,7 @@
             <div id="method-signature-template-holder">
                 <label for="">Method signature:</label>
                 <div class="field">
-                    <p>
-                        <input type="text" id="method-signature-input" name="method-signature-input" value="<%= signature %>">
-                    <p>
+                  <input type="text" id="method-signature-input" name="method-signature-input" value="<%= signature %>">
                 </div>
             </div>
         </script>
@@ -171,9 +169,7 @@
             <div class="model-name-template" id="model-name-template-holder">
                 <div class="field">
                     <label for="model-name-input"><%= label %>:</label>
-                    <p>
-                        <input type="text" id="model-name-input" name="model-name-input" value="<%= name %>">
-                    </p>
+                    <input type="text" id="model-name-input" name="model-name-input" value="<%= name %>">
                 </div>
                 <div class="field">
                     <label for="model-name-overwrite-inheritance">Do not inherit from db.models.Model:</label>
@@ -182,9 +178,7 @@
                 <div class="field">
                     <div class="base-class<% if (!base_class) { %> invisible<% } %>">
                         <label for="model-base-class">Inherit from:</label>
-                        <p>
-                            <input type="text" id="model-base-class" name="model-base-class" value="<%= base_class %>">
-                        </p>
+                        <input type="text" id="model-base-class" name="model-base-class" value="<%= base_class %>">
                     </div>
                 </div>
             </div>
