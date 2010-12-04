@@ -30,10 +30,20 @@ $(function () {
             'dblclick .app, .app-name': 'zoomIn'
         }),
 
+        create: function () {
+            // pNNAC(View, Collection, {input, template_name, keyword, label})
+            this.promptNameAndCreate(DjangoModelView, DjangoModels, '#model-name-template', {
+                keyword: 'model',
+                label: 'Model name'
+            }, '#model-name-input');
+            return false;
+        },
+
         zoomIn: function (e) {
             var app = $(e.target).closest('.app');
             this.collection.hideAll(app);
             window.location.href = '#' + this.model.get('name') + '/models.py';
+            this.collection.trigger('zoom', this);
             // App.zoomIn(app);
         }
     });

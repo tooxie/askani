@@ -42,6 +42,20 @@ $(function () {
             app.get('models').fetch();
         },
 
+        sanitizeName: function (name) {
+            name = name.toLowerCase().replace(/[\s-]/g, '_').replace(/[^a-z_]/g, '');
+            while (name[0] === '_') {
+                name = name.substr(1);
+            }
+            while (name[name.length - 1] === '_') {
+                name = name.substr(0, name.length - 1);
+            }
+            if (!name) {
+                throw new Exceptions.EmptyNameError();
+            }
+            return name;
+        },
+
         modelsCount: function () {
             if (this.get('models')) {
                 return this.get('models').size();

@@ -260,7 +260,7 @@ $(function () {
 
         promptNameAndCreate: function (View, Collection, template, template_params, input) {
             var params = {};
-            params[template_params.keyword] = '';
+            params[template_params.keyword] = { get: function () { return ''; } };
             $.jPrompt(_.template($(template).html())($.extend({}, template_params, params)), {
                 context: this,
                 submit: function (view) {
@@ -301,9 +301,10 @@ $(function () {
             }
             view = new View($.extend({}, this.getConf(), {
                 collection: Collection,
-                model: model,
+                container: this.id,
+                model: model
             }));
-            $(this.container).append(view.render().el);
+            $('#' + this.id).append(view.render().el);
             return false;
         },
 
@@ -315,7 +316,7 @@ $(function () {
                 existsException: this.events,
                 model: this.model,
                 template_selector: this.template_selector
-            }
+            };
         },
 
         raise: function (e) {
@@ -356,7 +357,7 @@ $(function () {
             return $(e.target).closest('.object');
         },
 
-        getInstance: function(e) {
+        getInstance: function (e) {
             return this.collection.get(this.getObject(e).attr('id'));
         },
 

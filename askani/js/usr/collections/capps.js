@@ -24,14 +24,6 @@ $(function () {
 
         localStorage: new Store('djangoapps'),
 
-        sanitizeName: function (name) {
-            name = name.toLowerCase().replace(/[\s_]/g, '_')
-            if (!name) {
-                throw new Exceptions.EmptyNameError();
-            }
-            return name;
-        },
-
         hideAll: function (except) {
             all = $('.app[id!="' + except.attr('id') + '"]').fadeOut('slow');
             except.hide('puff', {}, 2000);

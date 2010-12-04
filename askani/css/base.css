@@ -42,11 +42,16 @@ a:hover {
     list-style-type:none;
     margin:0;
     opacity:0.6;
+    overflow:auto;
     padding:0.5em 1em;
 }
 #toolbar li {
-    display:inline;
+    left:0;
+    display:block;
+    float:left;
     margin-right:2em;
+    opacity:1;
+    position:relative;
 }
 .invisible {
     display:none;

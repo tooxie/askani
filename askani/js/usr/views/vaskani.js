@@ -30,8 +30,19 @@ $(function () {
         events: $.extend({}, AskaniView.prototype.events, {
             'click #to-python': 'toPython',
             'click #to-json': 'toJSON',
-            'click #kill-all': 'destroyTheWorld',
+            'click #kill-all': 'destroyTheWorld'
         }),
+
+        initialize: function (attr) {
+            DjangoApps.bind('zoom', function (appView) {
+                window.CurrentDjangoApp = appView;
+                $('#new-model').click(function (e) {
+                    window.CurrentDjangoApp.create(e);
+                    return false;
+                });
+            });
+            AskaniView.prototype.initialize.call(this, attr);
+        },
 
         create: function (e) {
             // pNNAC(View, Collection, {input, template_name, keyword, label})
@@ -60,10 +71,38 @@ $(function () {
         existsException: Exceptions.DjangoAppExistsError
     });
 
+    // window.DjangoModels = new DjangoModelList({
+    //     existsException: Exceptions.DjangoModelExistsError
+    // });
+
     window.App = new AppView({
         collection: DjangoApps,
         existsException: Exceptions.DjangoAppExistsError,
         view: DjangoAppView
     });
+
+    if (DjangoApps.size() === 0) {
+        $('#new-app').attr('title', 'Start here').tipsy({
+            fade: true,
+            trigger: null
+        }).tipsy('show');
+    } else {
+        $('#to-python').removeClass('invisible');
+        $('#to-json').removeClass('invisible');
+        $('#kill-all').removeClass('invisible');
+    }
+    DjangoApps.bind('add', function () {
+        $('#to-python').fadeIn(2000);
+        $('#to-json').fadeIn(2000);
+        $('#kill-all').fadeIn(2000);
+    }).bind('zoom', function (app) {
+        $('#to-appdesigner').show();
+        $('#new-app').hide();
+        $('#new-model').attr('title', 'Create models').tipsy({
+            fade: true,
+            trigger: null
+        }).show().tipsy('show');
+    });
+
     $('body').append(App.render().el);
 });
