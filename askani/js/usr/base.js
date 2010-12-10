@@ -242,7 +242,6 @@ $(function () {
         },
 
         report: function (exception) {
-            // console.info(exception);
             var view = new Exceptions.View({model: exception});
             $('#messages').hide().html(view.render()).css('position', 'absolute').css('z-index', 1000).fadeIn();
             window.timeoutID = window.setTimeout(function () {
@@ -321,7 +320,6 @@ $(function () {
 
         raise: function (e) {
             var model, model_dom, model_id;
-            console.log('*click*');
             if (this.collection.length === 1) {
                 return true;
             }

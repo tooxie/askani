@@ -37,7 +37,7 @@ $(function () {
             DjangoApps.bind('zoom', function (appView) {
                 window.CurrentDjangoApp = appView;
                 $('#new-model').click(function (e) {
-                    window.CurrentDjangoApp.create(e);
+                    CurrentDjangoApp.create(e);
                     return false;
                 });
             });
@@ -96,6 +96,7 @@ $(function () {
         $('#to-json').fadeIn(2000);
         $('#kill-all').fadeIn(2000);
     }).bind('zoom', function (app) {
+        window.CurrentDjangoApp = app;
         $('#to-appdesigner').show();
         $('#new-app').hide();
         $('#new-model').attr('title', 'Create models').tipsy({

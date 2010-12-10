@@ -20,6 +20,9 @@
 $(function () {
     window.DjangoApp = AskaniModel.extend({
         initialize: function () {
+            this.set({
+                type: 'DjangoApp'
+            });
             if (!this.get('has_models')) {
                 this.set({
                     has_models: false

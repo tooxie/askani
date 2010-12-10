@@ -22,19 +22,20 @@
 */
 
 $(function () {
-    window.DjangoModel = Backbone.Model.extend({
+    window.DjangoModel = AskaniModel.extend({
         // base_class: ''
 
         initialize: function () {
             this.set({
-                base_class: ''
+                base_class: '',
+                type: 'DjangoModel'
             });
-        },
+        }
     });
 
-    window.DjangoModelField = Backbone.Model.extend({
+    window.DjangoModelField = AskaniModel.extend({
     });
 
-    window.DjangoModelMethod = Backbone.Model.extend({
+    window.DjangoModelMethod = AskaniModel.extend({
     });
 });

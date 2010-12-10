@@ -32,7 +32,8 @@ $(function () {
 
         create: function () {
             // pNNAC(View, Collection, {input, template_name, keyword, label})
-            this.promptNameAndCreate(DjangoModelView, DjangoModels, '#model-name-template', {
+            appModels = CurrentDjangoApp.model.get('models');
+            this.promptNameAndCreate(DjangoModelView, appModels, '#model-name-template', {
                 keyword: 'model',
                 label: 'Model name'
             }, '#model-name-input');
