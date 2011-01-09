@@ -19,6 +19,8 @@
 
 $(function () {
     window.DjangoApp = AskaniModel.extend({
+        __class__: 'DjangoApp',
+
         initialize: function () {
             this.set({
                 type: 'DjangoApp'
@@ -34,15 +36,22 @@ $(function () {
         },
 
         initModels: function (app) {
+            var models;
             app = app ? app : this;
-            app.set({
-                models: new DjangoModelList({
-                    existsException: Exceptions.DjangoModelExistsError,
-                    namespace: app.id,
-                    prefix: 'mod_'
-                })
+            models = new DjangoModelList({
+                existsException: Exceptions.DjangoModelExistsError,
+                namespace: app.id,
+                prefix: 'mod_'
             });
-            app.get('models').fetch();
+            app.set({
+                models: models
+            });
+            models.fetch();
+            if (models.size()) {
+                app.set({
+                    'has_models': true
+                });
+            }
         },
 
         sanitizeName: function (name) {

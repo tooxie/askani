@@ -178,30 +178,3 @@ function toPython(model) {
     }
     return code;
 }
-
-/*
-function destroyTheWorld() {
-    var djml, x;
-    djml = DjangoModels.length;
-    for (x = 0; x < djml; x += 1) {
-        DjangoModels.at(0).destroy();
-    }
-    App.render();
-}
-
-function getDeployCoords(x, y) {
-    var coords, i, l, m;
-    x = x ? x : 0;
-    y = y ? y : 0;
-    l = DjangoModels.length;
-    for (i = 0; i < l; i += 1) {
-        m = DjangoModels.at(i);
-        if (m.get('x') === x && m.get('y') === y) {
-            coords = getDeployCoords(x + 9, y + 18);
-            x = coords[0];
-            y = coords[1];
-        }
-    }
-    return [x, y];
-}
-*/

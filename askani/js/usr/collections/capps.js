@@ -24,9 +24,10 @@ $(function () {
 
         localStorage: new Store('djangoapps'),
 
-        hideAll: function (except) {
-            all = $('.app[id!="' + except.attr('id') + '"]').fadeOut('slow');
-            except.hide('puff', {}, 2000);
+        create: function (attributes, options) {
+            var model = AskaniCollection.prototype.create.call(this, attributes, options);
+            model.initModels();
+            return model;
         }
     });
 });

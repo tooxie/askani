@@ -23,6 +23,8 @@
 
 $(function () {
     window.AskaniModel = Backbone.Model.extend({
+        __class__: 'AskaniModel',
+
         initialize: function () {
             var args, defaults, key;
             defaults = {
@@ -32,7 +34,7 @@ $(function () {
                 z: 1
             };
             for (key in defaults) {
-                if (!this.get(key)) {
+                if (!this.get(key) && defaults[key] !== '') {
                     args = {};
                     args[key] = defaults[key];
                     this.set(args);
@@ -79,6 +81,8 @@ $(function () {
     });
 
     window.AskaniCollection = Backbone.Collection.extend({
+        __class__: 'AskaniCollection',
+
         initialize: function (attributes, options) {
             if (typeof attributes !== 'undefined') {
                 if (typeof attributes.namespace !== 'undefined') {
@@ -150,15 +154,9 @@ $(function () {
     });
 
     window.AskaniView = Backbone.View.extend({
+        __class__: 'AskaniView',
+
         tagName: 'div',
-
-        // className: 'object',
-
-        // id: 'workspace',
-
-        // container: 'body',
-
-        // template: _.template($('#template-selector').html());
 
         events: {
             'click .object-kill': 'destroy',
@@ -182,16 +180,15 @@ $(function () {
             if (this.view) {
                 this.collection.each(function (object, i) {
                     var view = new this.view($.extend({}, this.getConf(), {
-                        container: this.id,
                         model: object,
                         view: null
                     }));
-                    $(this.el).append(view.render().el);
+                    $(this.container).append(view.render().el);
                     return object;
                 }, this);
             } else {
                 if ($el.size()) {
-                    $el.remove();
+                    $el.html('');
                 }
                 $(this.el).html(this.template({
                     object: this.model
@@ -251,31 +248,34 @@ $(function () {
             }, 6000);
         },
 
-        create: function (e) {
-            // pNNAC(View, Collection, {input, template_name, keyword, label})
+        create: function (e, clone) {
+            // pNAC(View, Collection, {input, template_name, keyword, label})
             this.report(new Exceptions.NotImplementedError(this));
             return false;
         },
 
-        promptNameAndCreate: function (View, Collection, template, template_params, input) {
+        promptNameAndCreate: function (View, Collection, template, template_params, input, clone) {
             var params = {};
             params[template_params.keyword] = { get: function () { return ''; } };
             $.jPrompt(_.template($(template).html())($.extend({}, template_params, params)), {
                 context: this,
                 submit: function (view) {
-                    view.createAndRender(View, Collection, template, input);
+                    view.createAndRender(View, Collection, template, input, clone);
                 }
             });
             return false;
         },
 
-        createAndRender: function (View, Collection, template, input) {
+        createAndRender: function (View, Collection, template, input, clone) {
             var base_class = '',
+                container,
                 coords,
                 holder = $(template + '-holder'),
+                input_object,
                 model,
                 model_name,
                 view;
+            clone = clone ? clone : false;
             input_object = holder.find(input);
             model_name = input_object.val();
             input_object.blur();
@@ -298,12 +298,21 @@ $(function () {
             if (!model) {
                 return false;
             }
+            if (this.id) {
+                container = this.id;
+            } else {
+                container = this.container;
+            }
             view = new View($.extend({}, this.getConf(), {
                 collection: Collection,
-                container: this.id,
+                container: container,
                 model: model
             }));
-            $('#' + this.id).append(view.render().el);
+            $(view.container).append(view.render().el);
+            if (clone) {
+                view = cloneView(model);
+                $('#workspace').append(view.render().el);
+            }
             return false;
         },
 
@@ -311,8 +320,8 @@ $(function () {
             return {
                 className: this.className,
                 collection: this.collection,
-                container: this.el,
-                existsException: this.events,
+                container: this.id,
+                existsException: this.existsException,
                 model: this.model,
                 template_selector: this.template_selector
             };
@@ -381,7 +390,8 @@ $(function () {
             var object = this.getInstance(e),
                 target = $(e.target);
             object.setPosition(target.css('left'), target.css('top'));
-            this.render();
+            target.css('left', object.get('x'))
+                  .css('top', object.get('y'));
             return true;
         }
     });

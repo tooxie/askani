@@ -23,9 +23,9 @@
 
 $(function () {
     window.AppView = AskaniView.extend({
-        id: 'workspace',
+        __class__: 'AppView',
 
-        container: 'body',
+        container: '#workspace',
 
         events: $.extend({}, AskaniView.prototype.events, {
             'click #to-python': 'toPython',
@@ -34,10 +34,9 @@ $(function () {
         }),
 
         initialize: function (attr) {
-            DjangoApps.bind('zoom', function (appView) {
-                window.CurrentDjangoApp = appView;
+            DjangoApps.bind('zoom', function () {
                 $('#new-model').click(function (e) {
-                    CurrentDjangoApp.create(e);
+                    CurrentDjangoApp.create(e, clone=true);
                     return false;
                 });
             });
@@ -63,6 +62,9 @@ $(function () {
                 object.destroy();
             }
             $('#kill-all').fadeOut(2000);
+            $('#to-python').fadeOut(2000);
+            $('#to-json').fadeOut(2000);
+            CurrentDjangoApp = undefined;
             return false;
         }
     });
@@ -71,9 +73,9 @@ $(function () {
         existsException: Exceptions.DjangoAppExistsError
     });
 
-    // window.DjangoModels = new DjangoModelList({
-    //     existsException: Exceptions.DjangoModelExistsError
-    // });
+    window.DjangoModels = new DjangoModelList({
+        existsException: Exceptions.DjangoModelExistsError
+    });
 
     window.App = new AppView({
         collection: DjangoApps,
@@ -81,29 +83,5 @@ $(function () {
         view: DjangoAppView
     });
 
-    if (DjangoApps.size() === 0) {
-        $('#new-app').attr('title', 'Start here').tipsy({
-            fade: true,
-            trigger: null
-        }).tipsy('show');
-    } else {
-        $('#to-python').removeClass('invisible');
-        $('#to-json').removeClass('invisible');
-        $('#kill-all').removeClass('invisible');
-    }
-    DjangoApps.bind('add', function () {
-        $('#to-python').fadeIn(2000);
-        $('#to-json').fadeIn(2000);
-        $('#kill-all').fadeIn(2000);
-    }).bind('zoom', function (app) {
-        window.CurrentDjangoApp = app;
-        $('#to-appdesigner').show();
-        $('#new-app').hide();
-        $('#new-model').attr('title', 'Create models').tipsy({
-            fade: true,
-            trigger: null
-        }).show().tipsy('show');
-    });
-
-    $('body').append(App.render().el);
+    App.render();
 });

@@ -24,6 +24,7 @@
          window
 */
 $(function () {
+    /*
     window.DjangoModelList = Backbone.Collection.extend({
         model: DjangoModel,
 
@@ -151,11 +152,21 @@ $(function () {
             return method.get('position');
         }
     });
+    */
 
     window.DjangoModelList = AskaniCollection.extend({
         model: DjangoModel
 
         // localStorage: new Store("djangomodels"),
     });
+
+    window.DjangoModelFieldList = AskaniCollection.extend({
+        model: DjangoModelField
+    });
+
+    window.DjangoModelMethodList = AskaniCollection.extend({
+        model: DjangoModelMethod
+    });
+
     // window.DjangoModels = new DjangoModelList();
 });

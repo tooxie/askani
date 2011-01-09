@@ -25,10 +25,15 @@ $(function () {
 
         template: _.template($('#model-template').html()),
 
-        events: $.extend({}, this.events, {
+        events: $.extend({}, AskaniView.prototype.events, {
             'click #new-model': 'promptModelName',
             'click .model': 'raiseModel'
         }),
+
+        initialize: function (attr) {
+            AskaniView.prototype.initialize.call(this, attr);
+            this.container = '#' + attr.container + ' .models';
+        },
 
         promptModelName: function () {
             console.log('promptModelName()');
@@ -36,6 +41,21 @@ $(function () {
 
         raiseModel: function () {
             console.log('raiseModel()');
+        },
+
+        saveCoords: function(e) {
+            var object,
+                target = $(e.target),
+                target_id;
+            if (target.hasClass('clone')) {
+                target_id = target.attr('id').substr(6);
+                object = CurrentDjangoApp.model.get('models').get(target_id);
+                object.setPosition(target.css('left'), target.css('top'));
+            }
+            target = $('#' + target_id);
+            target.css('left', object.get('x'))
+                  .css('top', object.get('y'));
+            return true;
         }
     });
 });
