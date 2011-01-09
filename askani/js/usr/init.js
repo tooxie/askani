@@ -87,6 +87,10 @@ $(document).ready(function () {
         App.create(e);
         return false;
     });
+    $('#new-model').click(function (e) {
+        CurrentDjangoApp.create(e, clone=true);
+        return false;
+    });
     $('#kill-all').click(function () {
         App.destroyTheWorld();
     });

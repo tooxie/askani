@@ -54,13 +54,13 @@ Askani helps you focus just in what's important. You don't need to remember all 
  3rd party software
 --------------------
 
-* `jQuery`_.
-* `jQuery UI`_.
-* `JSON2`_.
-* `Underscore.js`_.
-* `Backbone.js`_.
-* `Backbone localStorage`_.
-* `gaTrack`_.
+* `jQuery`_
+* `jQuery UI`_
+* `JSON2`_
+* `Underscore.js`_
+* `Backbone.js`_
+* `Backbone localStorage`_
+* `gaTrack`_
 
 -----------
  Tested in

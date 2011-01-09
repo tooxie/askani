@@ -33,16 +33,6 @@ $(function () {
             'click #kill-all': 'destroyTheWorld'
         }),
 
-        initialize: function (attr) {
-            DjangoApps.bind('zoom', function () {
-                $('#new-model').click(function (e) {
-                    CurrentDjangoApp.create(e, clone=true);
-                    return false;
-                });
-            });
-            AskaniView.prototype.initialize.call(this, attr);
-        },
-
         create: function (e) {
             // pNNAC(View, Collection, {input, template_name, keyword, label})
             this.promptNameAndCreate(DjangoAppView, DjangoApps, '#app-name-template', {
