@@ -42,6 +42,10 @@ $(function () {
             return false;
         },
 
+        toPython: function (e) {
+            console.log('to python...');
+        },
+
         destroyTheWorld: function (e) {
             var l = this.collection.size(),
                 object,

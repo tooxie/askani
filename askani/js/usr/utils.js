@@ -58,6 +58,13 @@ String.prototype.slugify = function () {
     return slug.toLowerCase();
 };
 
+function getID(id) {
+    if (id.substr(0, 6) === 'clone_') {
+        return id.substr(6);
+    }
+    return id;
+}
+
 (function ($) {
     $.jGetHolder = function (message, extra, prefill) {
         var html, id, residue;

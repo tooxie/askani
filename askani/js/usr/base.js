@@ -62,6 +62,8 @@ $(function () {
         setPosition: function (x, y) {
             x = (typeof x === 'string') ? Number(x.replace(/[px]/g, '')) : x;
             y = (typeof y === 'string') ? Number(y.replace(/[px]/g, '')) : y;
+            x = (x < 0) ? 0 : x;
+            y = (y < 0) ? 0 : y;
             this.save({
                 x: (x > 0) ? x : 0,
                 y: (y > 0) ? y : 0
@@ -161,11 +163,12 @@ $(function () {
         events: {
             'click .object-kill': 'destroy',
             'click .object-new': 'create',
+            'click': 'raise',
             'dragstop': 'saveCoords'
         },
 
         initialize: function (attr) {
-            _.bindAll(this, 'render', 'saveCoords');
+            _.bindAll(this, 'render', 'raise', 'saveCoords');
             this.configure(attr);
             if (this.collection) {
                 this.collection.fetch();
@@ -328,23 +331,27 @@ $(function () {
         },
 
         raise: function (e) {
-            var model, model_dom, model_id;
+            var model,
+                model_dom,
+                model_id;
             if (this.collection.length === 1) {
                 return true;
             }
-            if ($(e.target).hasClass('model')) {
+            if ($(e.target).hasClass('object')) {
                 model_dom = $(e.target);
-                model_id = model_dom.attr('id');
+                model_id = getID(model_dom.attr('id'));
             } else {
-                model_dom = $(e.target).closest('.model');
-                model_id = model_dom.attr('id');
+                model_dom = $(e.target).closest('.object');
+                model_id = getID(model_dom.attr('id'));
             }
             if (Number(model_dom.css('z-index')) === this.collection.size()) {
                 return true;
             }
             model = this.collection.get(model_id);
-            this.collection.each(function (el, i, list) {
+            _.each(this.collection, function (el, i, list) {
                 // For some reason I receive a ghost object sometimes.
+                var model = model ? model : this;
+                el = el ? el : list.at(i);
                 if (el.id) {
                     // I substract one from every z higher than the model I'm
                     // rising, that way I know that when I assign it the highest
@@ -352,9 +359,10 @@ $(function () {
                     if (el.get('z') > model.get('z')) {
                         el.save({z: el.get('z') - 1});
                         $('#' + el.id).css('z-index', el.get('z'));
+                        $('#clone_' + el.id).css('z-index', el.get('z'));
                     }
                 }
-            });
+            }, model);
             model.save({z: this.collection.length});
             model_dom.css('z-index', model.get('z'));
             return false;
@@ -389,6 +397,7 @@ $(function () {
         saveCoords: function (e) {
             var object = this.getInstance(e),
                 target = $(e.target);
+            console.info('dragstop');
             object.setPosition(target.css('left'), target.css('top'));
             target.css('left', object.get('x'))
                   .css('top', object.get('y'));

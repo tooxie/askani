@@ -43,7 +43,8 @@ function cloneView(object, view_class, params) {
     view_class = view_class ? view_class : DjangoModelView;
     params = $.extend({}, {
         className: 'model object clone',
-        container: '#workspace',
+        collection: object.collection,
+        container: 'workspace',
         model: clone,
         view: null
     }, params);
