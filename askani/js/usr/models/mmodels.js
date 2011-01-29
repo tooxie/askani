@@ -116,7 +116,7 @@ $(function () {
             model = model ? model : this;
             model.set({
                 fields: new DjangoModelFieldList({
-                    namespace: model.id,
+                    namespace: 'fields-' + model.id,
                     existsException: Exceptions.DjangoModelFieldExistsError
                 })
             });
@@ -132,8 +132,8 @@ $(function () {
             model = model ? model : this;
             model.set({
                 methods: new DjangoModelMethodList({
-                    namespace: model.id,
-                    existsException: Exceptions.DjangoModelFieldExistsError
+                    namespace: 'methods-' + model.id,
+                    existsException: Exceptions.DjangoModelMethodExistsError
                 })
             });
             model.get('methods').fetch();
@@ -169,10 +169,36 @@ $(function () {
     });
 
     window.DjangoModelField = AskaniModel.extend({
-        // pass
+        __class__: 'DjangoModelField',
+
+        position: 1,
+
+        type: 'CharField',
+
+        initialize: function () {
+            if (!this.get('position')) {
+                this.set({position: this.position});
+            }
+            if (!this.get('type')) {
+                this.set({type: this.type});
+            }
+        }
     });
 
     window.DjangoModelMethod = AskaniModel.extend({
-        // pass
+        __class__: 'DjangoModelMethod',
+
+        position: 1,
+
+        params: ['self'],
+
+        initialize: function () {
+            if (!this.get('position')) {
+                this.set({position: this.position});
+            }
+            if (!this.get('params')) {
+                this.set({params: this.params});
+            }
+        }
     });
 });

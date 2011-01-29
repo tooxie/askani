@@ -92,14 +92,14 @@
 
         <!-- Model field -->
         <script type="text/template" id="model-field-template">
-            <span class="type" title="Double click to edit"><%= field.get('type') %></span>
-            <span class="name" title="Double click to edit"><%= field.get('name') %></span>
+            <span class="type" title="Double click to edit"><%= object.get('type') %></span>
+            <span class="name" title="Double click to edit"><%= object.get('name') %></span>
             <a href="#" class="child-kill model-field-kill" title="Kill field"></a>
         </script>
 
         <!-- Model method -->
         <script type="text/template" id="model-method-template">
-            <span class="signature" title="Double click to edit"><%= method.get('name') %>(<%= method.get('params').join(', ') %>)</span>
+            <span class="signature" title="Double click to edit"><%= object.get('name') %>(<%= object.get('params').join(', ') %>)</span>
             <a href="#" class="child-kill model-method-kill" title="Kill method"></a>
         </script>
 

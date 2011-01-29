@@ -104,7 +104,7 @@ $(function () {
             }
             this.each(function (el) {
                 if (el.isEqual(attributes.name)) {
-                    throw new Exceptions.ModelExists({
+                    throw new this.existsException({
                         model: attributes.name
                     });
                 }
@@ -243,7 +243,11 @@ $(function () {
 
         report: function (exception) {
             var view = new Exceptions.View({model: exception});
-            $('#messages').hide().html(view.render()).css('position', 'absolute').css('z-index', 1000).fadeIn();
+            $('#messages').hide()
+                          .html(view.render())
+                          .css('position', 'absolute')
+                          .css('z-index', 1000)
+                          .fadeIn();
             window.timeoutID = window.setTimeout(function () {
                 $('#messages').fadeOut();
                 window.clearTimeout(window.timeoutID);
@@ -397,7 +401,6 @@ $(function () {
         saveCoords: function (e) {
             var object = this.getInstance(e),
                 target = $(e.target);
-            console.info('dragstop');
             object.setPosition(target.css('left'), target.css('top'));
             target.css('left', object.get('x'))
                   .css('top', object.get('y'));

@@ -109,9 +109,8 @@ span.error {
     top:5px;
 }
 .app .models {
-    /* position:absolute; */
+    display:none;
     top:31px;
-    visibility: hidden;
     width:100%;
 }
 .model {
@@ -197,7 +196,7 @@ span.error {
 }
 .ui-sortable-placeholder {
     border:1px dashed black;
-    height:1.4em;
+    height:1.5em;
 }
 .ui-dialog-content .field p {
     margin:1em;
