@@ -31,6 +31,7 @@ $(function () {
         events: $.extend({}, AskaniView.prototype.events, {
             'blur .new-model-field': 'blurNewInput',
             'blur .new-model-method': 'blurNewInput',
+            'click .model-meta': 'modelMetaOptions',
             'focus .new-model-field': 'focusNewInput',
             'focus .new-model-method': 'focusNewInput',
             'keypress .new-model-field': 'createObject',
@@ -210,6 +211,51 @@ $(function () {
             });
             container.append(view.render().el);
             return true;
+        },
+
+        modelMetaOptions: function (e) {
+            var model,
+                target = $(e.target),
+                target_id;
+            target_id = target.closest('.model').attr('id').substr(6);
+            model = CurrentDjangoApp.model.get('models').get(target_id);
+            $.jPrompt(_.template($('#model-meta-template').html())({
+                model: model
+            }), {
+                context: {
+                    model: model,
+                    view: this
+                },
+                submit: function (params) {
+                    params.view.setMetaOptions(params.model);
+                },
+                title: 'Model Meta options',
+                width: 340
+            });
+            return false;
+        },
+
+        setMetaOptions: function (model) {
+            var meta,
+                options = {},
+                option_id,
+                val = '';
+            for (meta in model.get('meta_options')) {
+                if (model.getMeta(meta)) {
+                    option_id = meta.replace(/_/g, '-') + '--' + model.id;
+                    if (model.get('meta_options')[meta].type !== 'boolean') {
+                        val = $('#' + option_id).val();
+                        options[meta] = val ? val : '';
+                    }
+                }
+            }
+            $('#model-meta-template-holder input:checked').each(function () {
+                options[this.id.substr(0, this.id.indexOf('--')).replace(/-/g, '_')] = ($(this).val() === 'true') ? true : false;
+            });
+            model.setMeta(options);  // Original
+            this.model = model;  // Clone
+            this.model.id = this.id;  // Hack. Sorry =(
+            this.render();
         }
     });
 

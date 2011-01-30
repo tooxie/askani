@@ -103,7 +103,6 @@ span.error {
     position:relative;
 }
 .app-models {
-    cursor:pointer;
     position:absolute;
     right:10px;
     top:5px;

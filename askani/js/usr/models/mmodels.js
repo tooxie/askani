@@ -144,6 +144,21 @@ $(function () {
             }
         },
 
+        setMeta: function (options) {
+            var has_meta = false,
+                meta = this.get('meta_options');
+            $.each(options, function (key, value) {
+                meta[key].value = options[key];
+                if (meta[key].value !== meta[key]['default']) {
+                    has_meta = true;
+                }
+            });
+            this.save({
+                meta_options: meta,
+                has_meta: has_meta
+            });
+        },
+
         getMeta: function (key) {
             var items = {},
                 o,
