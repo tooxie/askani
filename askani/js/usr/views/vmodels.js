@@ -39,7 +39,6 @@ $(function () {
         }),
 
         initialize: function (attr) {
-            _.bindAll(this, 'render');
             AskaniView.prototype.initialize.call(this, attr);
             this.container = '#' + attr.container + ' .models';
         },
@@ -180,6 +179,7 @@ $(function () {
                 model: field
             });
             container.append(view.render().el);
+            this.model = model;
             return true;
         },
 
@@ -210,6 +210,7 @@ $(function () {
                 model: method
             });
             container.append(view.render().el);
+            this.model = model;
             return true;
         },
 
@@ -268,11 +269,102 @@ $(function () {
 
         template: _.template($('#model-field-template').html()),
 
+        events: {
+            'click .model-field-kill': 'destroy',
+            'dblclick .model-field .type, .model-field .name': 'edit'
+        },
+
+        initialize: function () {
+            if (this.model) {
+                this.id = this.model.id;
+            }
+        },
+
         render: function (e) {
             $(this.el).html(this.template({
                 object: this.model
-            }));
+            })).attr('id', this.model.id);
             return this;
+        },
+
+        destroy: function (e) {
+            var field,
+                fields,
+                model,
+                model_id,
+                target = $(e.target);
+            model_id = target.closest('.model').attr('id').substr(6);
+            model = CurrentDjangoApp.model.get('models').get(model_id);
+            fields = model.get('fields');
+            field = fields.get(target.closest('.model-field').attr('id'));
+            $.jConfirm('Kill field ' + field.get('name') + '?', {
+                submit: function (params) {
+                    params.view.model.destroy();
+                    params.field.destroy();
+                    params.fields.remove(params.field);
+                    $(params.view.el).remove();
+                }, context: {
+                    field: field,
+                    fields: fields,
+                    view: this
+                }
+            });
+            return false
+        },
+
+        edit: function (e) {
+            var target = $(e.target);
+            $.jPrompt(_.template($('#model-field-edit-template').html())({
+                object: this.model
+            }), {
+                context: {
+                    target: target,
+                    view: this
+                },
+                open: function (event, ui) {
+                    $('#field-type').autocomplete({
+                        minLength: 2,
+                        source: Fields.types
+                    });
+                    $.jDefaults.open(event, ui);
+                },
+                resizable: true,
+                submit: function (params) {
+                    params.view.saveField(params.target);
+                },
+                width: 340
+            });
+            return false;
+        },
+
+        saveField: function (target) {
+            var field = this.model,
+                input = $('#model-field-edit-template-holder'),
+                model;
+            model = DjangoModels.get(target.closest('.model').attr('id'));
+            field.save({
+                name: input.find('#field-name').val(),
+                type: input.find('#field-type').val()
+            });
+            // TODO: Repensar la forma de editar las opciones de un campo.
+            if (Fields.isKnown(field.get('name'))) {
+                $.jPrompt(_.template($('#model-field-options-template').html())({
+                    options: Fields.getOptions(field.get('name'))
+                }), {
+                    context: {e: e, view: this},
+                    resizable: true,
+                    submit: function (params) {
+                        params.view.saveFieldOptions(params.e);
+                    },
+                    width: 340
+                });
+            }
+            this.render();
+            return false;
+        },
+
+        saveFieldOptions: function (e) {
+            return false;
         }
     });
 
@@ -285,11 +377,82 @@ $(function () {
 
         template: _.template($('#model-method-template').html()),
 
+        events: {
+            'click .model-method-kill': 'destroy',
+            'dblclick .signature': 'edit'
+        },
+
         render: function (e) {
             $(this.el).html(this.template({
                 object: this.model
-            }));
+            })).attr('id', this.model.id);
             return this;
+        },
+
+        destroy: function (e) {
+            var method,
+                methods,
+                model,
+                model_id,
+                target = $(e.target);
+            model_id = target.closest('.model').attr('id').substr(6);
+            model = CurrentDjangoApp.model.get('models').get(model_id);
+            methods = model.get('methods');
+            method = methods.get(target.closest('.model-method').attr('id'));
+            $.jConfirm('Kill method ' + method.get('name') + '?', {
+                submit: function (params) {
+                    params.view.model.destroy();
+                    params.method.destroy();
+                    params.methods.remove(params.method);
+                    $(params.view.el).remove();
+                }, context: {
+                    method: method,
+                    methods: methods,
+                    view: this
+                }
+            });
+            return false;
+        },
+
+        edit: function (e) {
+            var target = $(e.target);
+            $.jPrompt(_.template($('#method-signature-template').html())({
+                signature: target.html()
+            }), {
+                context: {
+                    target: target,
+                    view: this
+                },
+                submit: function (params) {
+                    params.view.setSignature(params.target);
+                }
+            });
+            return false;
+        },
+
+        setSignature: function (target) {
+            var i,
+                method,
+                method_el = target.closest('.model-method'),
+                model,
+                model_id,
+                signature;
+            signature = $('#method-signature-template-holder').find('#method-signature-input').val();
+            model_id = target.closest('.model').attr('id').substr(6);
+            model = CurrentDjangoApp.model.get('models').get(model_id);
+            method = model.get('methods').get(method_el.attr('id'));
+            i = signature.indexOf('(');
+            try {
+                method.save({
+                    name: signature.substr(0, i),
+                    params: signature.substring(i + 1, signature.length - 1)
+                                     .split(',')
+                });
+            } catch (err) {
+                App.report(err);
+                return false;
+            }
+            method_el.children('.signature').html(method.getSignature());
         }
     });
 });

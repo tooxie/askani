@@ -42,6 +42,16 @@ $(function () {
             }
         },
 
+        save: function (attributes, options) {
+            Backbone.Model.prototype.save.call(this, attributes, options);
+            this.postSave();
+            return this;
+        },
+
+        postSave: function () {
+            return true;  // Placeholder
+        },
+
         set: function (attributes, options) {
             if (typeof attributes !== 'undefined') {
                 if (attributes.name !== null && typeof attributes.name !== 'undefined') {

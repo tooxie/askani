@@ -43,7 +43,11 @@ $(function () {
         },
 
         toPython: function (e) {
-            console.log('to python...');
+            return 'Not implemented yet... sorry.';
+        },
+
+        toJSON: function (e) {
+            return JSON.stringify(DjangoApps, null, 2);
         },
 
         destroyTheWorld: function (e) {
@@ -60,15 +64,30 @@ $(function () {
             $('#to-json').fadeOut(2000);
             CurrentDjangoApp = undefined;
             return false;
+        },
+
+        output: function (code) {
+            var margin = emSize(2.7);
+            $.jAlert(_.template($('#output-template').html())({
+                code: code.trim()
+            }), {
+                buttons: {
+                    Close: function (e, ui) {
+                        $(this).dialog('close');
+                    }
+                },
+                height: 450,
+                hide: false,
+                model: true,
+                show: 'fade',
+                title: 'stdout',
+                width: 625 + margin
+            });
         }
     });
 
     window.DjangoApps = new DjangoAppList({
         existsException: Exceptions.DjangoAppExistsError
-    });
-
-    window.DjangoModels = new DjangoModelList({
-        existsException: Exceptions.DjangoModelExistsError
     });
 
     window.App = new AppView({

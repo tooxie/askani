@@ -35,6 +35,10 @@ $(function () {
             }
         },
 
+        postSave: function () {
+            this.initModels();
+        },
+
         initModels: function (app) {
             var models;
             app = app ? app : this;

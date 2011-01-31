@@ -92,6 +92,14 @@ $(document).ready(function () {
         CurrentDjangoApp.create(e, clone=true);
         return false;
     });
+    $('#to-python').click(function (e) {
+        App.output(App.toPython());
+        return false;
+    });
+    $('#to-json').click(function (e) {
+        App.output(App.toJSON());
+        return false;
+    });
     $('#kill-all').click(function () {
         App.destroyTheWorld();
     });

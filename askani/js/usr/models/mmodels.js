@@ -112,6 +112,11 @@ $(function () {
             }
         },
 
+        postSave: function () {
+            this.initFields();
+            this.initMethods();
+        },
+
         initFields: function (model) {
             model = model ? model : this;
             model.set({
@@ -197,6 +202,14 @@ $(function () {
             if (!this.get('type')) {
                 this.set({type: this.type});
             }
+        },
+
+        sanitizeName: function (name) {
+            name = name.slugify();
+            if (!name) {
+                throw new Exceptions.EmptyNameError();
+            }
+            return name;
         }
     });
 
@@ -214,6 +227,81 @@ $(function () {
             if (!this.get('params')) {
                 this.set({params: this.params});
             }
+        },
+
+        set: function (attributes, options) {
+            if (typeof attributes !== 'undefined') {
+                if (attributes.params) {
+                    attributes.params = this.parseParams(attributes.params);
+                }
+                if (attributes.name && attributes.params) {
+                    this.parseSignature(
+                        attributes.name + '(' + attributes.params.join(', ') + ')'
+                    );
+                }
+            }
+            return AskaniModel.prototype.set.call(this, attributes, options);
+        },
+
+        sanitizeName: function (name) {
+            name = name.slugify();
+            if (!name) {
+                throw new Exceptions.EmptyNameError();
+            }
+            return name;
+        },
+
+        getSignature: function () {
+            return this.get('name') + '(' + this.get('params').join(', ') + ')';
+        },
+
+        parseSignature: function (signature) {
+            var match;
+            match = signature.match(/^[a-zA-Z_]+[\d_]*\([\w,\s\*]+\)$/g);
+            if (match === null || (match.length !== 1 && match[0] !== signature)) {
+                throw new Exceptions.InvalidSignatureError();
+            }
+            return signature;
+        },
+
+        parseParams: function (params) {
+            var fc, ftc,
+                k = false,
+                kw = false,
+                l = params.length,
+                names = [],
+                x = 0,
+                y = 0;
+            for (x = 0; x < params.length; x += 1) {
+                params[x] = params[x].trim();
+                fc = params[x].substr(0, 1);  // First character
+                ftc = params[x].substr(0, 2);  // First two characters
+                params[x] = params[x].slugify();
+                for (y = 0; y < names.length; y += 1) {
+                    if (params[x] === names[y]) {
+                        throw new Exceptions.InvalidParametersError();
+                    }
+                }
+                names[names.length] = params[x];
+                if (ftc === '**') {
+                    if (x + 1 !== l) {
+                        throw new Exceptions.InvalidParametersError();
+                    }
+                    params[x] = '**' + params[x];
+                    kw = true;
+                } else {
+                    if (k || kw) {
+                        throw new Exceptions.InvalidParametersError();
+                    }
+                    if (fc === '*') {
+                        params[x] = '*' + params[x];
+                        k = true;
+                    } else if (fc.match(/\d/g)) {
+                        throw new Exceptions.InvalidParametersError();
+                    }
+                }
+            }
+            return params;
         }
     });
 });
