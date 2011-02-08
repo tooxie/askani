@@ -309,7 +309,7 @@ $(function () {
                     view: this
                 }
             });
-            return false
+            return false;
         },
 
         edit: function (e) {

@@ -14,6 +14,7 @@
 /*global
          AskaniModel,
          DjangoModelList,
+         settings,
          window
 */
 
@@ -76,6 +77,116 @@ $(function () {
             if (this.get('models')) {
                 return this.get('models').size();
             }
+        },
+
+        toPython: function () {
+            return {
+                admin: this.getAdminPy(),
+                models: this.getModelsPy(),
+                tests: this.getTestsPy(),
+                views: this.getViewsPy()
+            };
+        },
+
+        getAdminPy: function () {
+            var admin = '',
+                code = '# -*- coding: utf-8 -*-\n',
+                len = 0,
+                models,
+                name = '',
+                register = '',
+                x,
+                xi = settings.get('explicit_imports');
+            if (xi) {
+                code += 'from django.contrib.admin import ModelAdmin, site\n\n\n';
+            } else {
+                admin = 'admin.';
+                code += 'from django.contrib import admin\n\n\n';
+            }
+            models = this.get('models');
+            len = models.length;
+            for (x = 0; x < len; x += 1) {
+                name = models.at(x).get('name');
+                code += 'class ' + name + 'Admin(' + admin + 'ModelAdmin):\n' +
+                        '    pass\n\n\n';
+                register += admin + 'site.register(' + name + ', ' + name +
+                            'Admin)\n';
+            }
+            code += register;
+            return code.trim();
+        },
+
+        getModelsPy: function () {
+            var code = '',
+                db = '',
+                fields,
+                len = 0,
+                model,
+                models,
+                name = '',
+                x = 0,
+                xi = settings.get('explicit_imports');
+            fields = this.getFields();
+            if (xi) {
+                code = '# -*- coding: utf-8 -*-\n' +
+                       'from django.db.models import (Model'
+                for (x = 0; x < fields['standard'].length; x += 1) {
+                    nl = code.lastIndexOf('\n');
+                    if (code.substr(nl).length + fields['standard'].length > 76) {
+                        code += ',\n    ';
+                    } else {
+                    }
+                    code += fields['standard'][x];
+                }
+                code += ')\n\n\n';
+            } else {
+                code = '# -*- coding: utf-8 -*-\n' +
+                       'from django.db import models\n\n\n';
+                db = 'models.';
+            }
+            models = this.get('models');
+            len = models.length;
+            fields = this.getFields();
+            for (x = 0; x < len; x += 1) {
+                code += models.at(x).toPython() + '\n\n\n';
+            }
+            console.log(code);
+            return code.trim();
+        },
+
+        getFields: function () {
+            var fields = {
+                    'custom': [],
+                    'standard': []},
+                i, j, k,
+                x, y;
+            i = this.get('models').length;
+            for (x = 0; x < i; x += 1) {
+                model = this.get('models').at(x);
+                j = model.get('fields').length;
+                for (y = 0; y < j; y += 1) {
+                    field = model.get('fields').at(y);
+                    if (Fields.isKnown(field.get('name'))) {
+                        k = fields['standard'].length;
+                        fields['standard'][k] = field.get('name');
+                    } else {
+                        k = fields['custom'].length;
+                        fields['custom'][k] = field.get('name');
+                    }
+                }
+            }
+            return fields;
+        },
+
+        getTestsPy: function () {
+            return '# -*- coding: utf-8 -*-\n' +
+                   'from django.test import TestCase\n\n\n' +
+                   '# Create your tests here.';
+        },
+
+        getViewsPy: function () {
+            return '# -*- coding: utf-8 -*-\n' +
+                   '# Create your views here.';
         }
     });
 });

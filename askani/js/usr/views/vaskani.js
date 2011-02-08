@@ -42,8 +42,28 @@ $(function () {
             return false;
         },
 
+        getHeader: function() {
+            return '# -*- coding: utf-8 -*-\n' +
+                   'from django.db import models';
+        },
+
         toPython: function (e) {
-            return 'Not implemented yet... sorry.';
+            var code,
+                l,
+                model,
+                x;
+            if (typeof CurrentDjangoApp !== 'undefined') {
+                code = this.getHeader();
+                for (model in CurrentDjangoApp.model.get('models')) {
+                    code += '\n\n' + model.toPython();
+                }
+            } else {
+                l = DjangoApps.length;
+                for (x = 0; x < l; x += 1) {
+                    code += DjangoApps.at(x).toPython();
+                }
+            }
+            return code;
         },
 
         toJSON: function (e) {

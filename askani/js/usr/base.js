@@ -88,7 +88,7 @@ $(function () {
         },
 
         toPython: function () {
-            return toPython(this);
+            throw NotImplementedError;
         }
     });
 

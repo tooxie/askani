@@ -18,6 +18,7 @@
          DjangoModelMetadata,
          DjangoModelMethodList,
          Exceptions,
+         settings,
          window
 */
 
@@ -185,6 +186,26 @@ $(function () {
 
         isAbstract: function () {
             return this.getMeta('abstract') === true;
+        },
+
+        toPython: function () {
+            var code = '',
+                fields,
+                len,
+                m = settings.get('explicit_imports', false) ? '' : 'models.',
+                x;
+            code = 'class ' + this.get('name') + '(' + m + 'Model):\n';
+            fields = this.get('fields');
+            len = fields.length;
+            if (len === 0) {
+                code += '    pass';
+            } else {
+                for (x = 0; x < len; x += 1) {
+                    code += '    ' + fields.at(x).toPython() + '\n';
+                }
+                // TODO: Do the same for methods.
+            }
+            return code.trim();
         }
     });
 
@@ -210,6 +231,21 @@ $(function () {
                 throw new Exceptions.EmptyNameError();
             }
             return name;
+        },
+
+        toPython: function () {
+            var ai = "')",
+                bi = "_(u'",
+                i = settings.get('use_i18n', false),
+                m = settings.get('explicit_imports', false) ? '' : 'models.';
+                if (!i) {
+                    ai = "'";
+                    bi = "'";
+                }
+            // FIXME: This breaks on ForeignKeys.
+            return this.get('name') + ' = ' + m + this.get('type') +
+                   '(' + bi + this.get('name').replace('_', ' ') + ai + ')';
+            // TODO: Add parameters.
         }
     });
 
