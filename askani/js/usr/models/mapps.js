@@ -117,7 +117,7 @@ $(function () {
         },
 
         getModelsPy: function () {
-            var code = '',
+            var code = '# -*- coding: utf-8 -*-\n',
                 db = '',
                 fields,
                 len = 0,
@@ -128,29 +128,26 @@ $(function () {
                 xi = settings.get('explicit_imports');
             fields = this.getFields();
             if (xi) {
-                code = '# -*- coding: utf-8 -*-\n' +
-                       'from django.db.models import (Model'
+                code += 'from django.db.models import (Model'
                 for (x = 0; x < fields['standard'].length; x += 1) {
                     nl = code.lastIndexOf('\n');
-                    if (code.substr(nl).length + fields['standard'].length > 76) {
+                    if (code.substr(nl).length + fields['standard'][x].length > 76) {
                         code += ',\n    ';
                     } else {
+                        code += ', ';
                     }
                     code += fields['standard'][x];
                 }
                 code += ')\n\n\n';
             } else {
-                code = '# -*- coding: utf-8 -*-\n' +
-                       'from django.db import models\n\n\n';
+                code += 'from django.db import models\n\n\n';
                 db = 'models.';
             }
             models = this.get('models');
             len = models.length;
-            fields = this.getFields();
             for (x = 0; x < len; x += 1) {
                 code += models.at(x).toPython() + '\n\n\n';
             }
-            console.log(code);
             return code.trim();
         },
 
@@ -158,20 +155,29 @@ $(function () {
             var fields = {
                     'custom': [],
                     'standard': []},
+                in_list,
                 i, j, k,
-                x, y;
+                x, y, z;
             i = this.get('models').length;
             for (x = 0; x < i; x += 1) {
                 model = this.get('models').at(x);
                 j = model.get('fields').length;
                 for (y = 0; y < j; y += 1) {
                     field = model.get('fields').at(y);
-                    if (Fields.isKnown(field.get('name'))) {
+                    if (Fields.isKnown(field.get('type'))) {
+                        in_list = false;
                         k = fields['standard'].length;
-                        fields['standard'][k] = field.get('name');
+                        for (z = 0; z < k; z += 1) {
+                            if (fields['standard'][z] === field.get('type')) {
+                                in_list = true;
+                            }
+                        }
+                        if (!in_list) {
+                            fields['standard'][k] = field.get('type');
+                        }
                     } else {
                         k = fields['custom'].length;
-                        fields['custom'][k] = field.get('name');
+                        fields['custom'][k] = field.get('type');
                     }
                 }
             }

@@ -29,11 +29,13 @@ var f,
         }
     },
     isKnown: function (field) {
-        $.each(this.types, function (i, f) {
-            if (f === field) {
+        var len = this.types.length,
+            x = 0;
+        for (x = 0; x < len; x += 1) {
+            if (this.types[x] === field) {
                 return true;
             }
-        });
+        }
         return false;
     },
     getOptions: function (field) {

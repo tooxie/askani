@@ -340,8 +340,9 @@ $(function () {
         saveField: function (target) {
             var field = this.model,
                 input = $('#model-field-edit-template-holder'),
-                model;
-            model = DjangoModels.get(target.closest('.model').attr('id'));
+                model, models;
+            models = CurrentDjangoApp.model.get('models')
+            model = models.get(target.closest('.model').attr('id').substr(6));
             field.save({
                 name: input.find('#field-name').val(),
                 type: input.find('#field-type').val()

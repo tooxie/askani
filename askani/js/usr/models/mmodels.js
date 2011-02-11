@@ -191,19 +191,25 @@ $(function () {
         toPython: function () {
             var code = '',
                 fields,
-                len,
+                flen,
                 m = settings.get('explicit_imports', false) ? '' : 'models.',
+                methods,
+                mlen,
                 x;
-            code = 'class ' + this.get('name') + '(' + m + 'Model):\n';
+            code = 'class ' + this.get('name') + '(' + m + 'Model):\n\n';
             fields = this.get('fields');
-            len = fields.length;
-            if (len === 0) {
+            flen = fields.length;
+            methods = this.get('methods');
+            mlen = methods.length;
+            if (flen === 0 && mlen ===0) {
                 code += '    pass';
             } else {
-                for (x = 0; x < len; x += 1) {
+                for (x = 0; x < flen; x += 1) {
                     code += '    ' + fields.at(x).toPython() + '\n';
                 }
-                // TODO: Do the same for methods.
+                for (x = 0; x < mlen; x += 1) {
+                    code += '\n    ' + methods.at(x).toPython().replace('\n', '\n    ') + '\n';
+                }
             }
             return code.trim();
         }
@@ -233,19 +239,40 @@ $(function () {
             return name;
         },
 
-        toPython: function () {
+        isRelation: function () {
+            if (this.get('type') === 'ForeignKey') {
+                return true;
+            }
+            if (this.get('type') === 'ManyToManyField') {
+                return true;
+            }
+            if (this.get('type') === 'OneToOneField') {
+                return true;
+            }
+            return false;
+        },
+
+        getParams: function () {
             var ai = "')",
                 bi = "_(u'",
                 i = settings.get('use_i18n', false),
-                m = settings.get('explicit_imports', false) ? '' : 'models.';
-                if (!i) {
-                    ai = "'";
-                    bi = "'";
-                }
-            // FIXME: This breaks on ForeignKeys.
+                params;
+            if (!i) {
+                ai = "'";
+                bi = "'";
+            }
+            if (this.isRelation()) {
+                params = this.get('name');
+            } else {
+                params = bi + this.get('name').replace('_', ' ') + ai;
+            }
+            return params;
+        },
+
+        toPython: function () {
+            var m = settings.get('explicit_imports', false) ? '' : 'models.';
             return this.get('name') + ' = ' + m + this.get('type') +
-                   '(' + bi + this.get('name').replace('_', ' ') + ai + ')';
-            // TODO: Add parameters.
+                   '(' + this.getParams() + ')';
         }
     });
 
@@ -338,6 +365,11 @@ $(function () {
                 }
             }
             return params;
+        },
+
+        toPython: function () {
+            return 'def ' + this.getSignature() + ':\n' +
+                   '    pass';
         }
     });
 });
