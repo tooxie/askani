@@ -51,18 +51,44 @@ $(function () {
         },
 
         toPython: function (e) {
-            var code = '',
+            var app = '',
+                code = '',
                 l,
                 model,
                 models,
-                x;
+                tabs,
+                x, y;
             if (typeof CurrentDjangoApp !== 'undefined') {
-                return CurrentDjangoApp.model.toPython()['models'];
+                return CurrentDjangoApp.model.getModelsPy();
             } else {
+                code = '# -*- coding: utf-8 -*-\n' +
+                       'import os\n\n\n' +
+                       "if __name__ == '__main__':\n" +
+                       '    STRUCTURE = {\n';
                 l = DjangoApps.length;
                 for (x = 0; x < l; x += 1) {
-                    code += DjangoApps.at(x).toPython();
+                    app = DjangoApps.at(x);
+                    code += "        '" + app.get('name') + "': {\n";
+                    files = app.toPython();
+                    for (dotpy in files) {
+                        tabs = '            ';
+                        code += tabs + "'" + dotpy + '\': """' +
+                                files[dotpy].replace(/"""/g, '\\"""') + '""",\n';
+                    }
+                    code += '},';
                 }
+                code += '}\n' +
+                        '    for app, files in STRUCTURE.items():\n' +
+                        '        if not os.path.exists(app):\n' +
+                        '            try:\n' +
+                        '                os.makedirs(app)\n' +
+                        '            except Exception, e:\n' +
+                        '                print(\'Fatal error: %s\' % e)\n' +
+                        '                sys.exit(1)\n' +
+                        '        for dotpy, content in files.items():\n' +
+                        '            py = file(os.path.join(app, dotpy), \'w\')\n' +
+                        '            py.write(content)\n' +
+                        '            py.close()';
             }
             return code;
         },

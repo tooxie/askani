@@ -81,10 +81,10 @@ $(function () {
 
         toPython: function () {
             return {
-                admin: this.getAdminPy(),
-                models: this.getModelsPy(),
-                tests: this.getTestsPy(),
-                views: this.getViewsPy()
+                'models.py': this.getModelsPy(),
+                'admin.py': this.getAdminPy(),
+                'tests.py': this.getTestsPy(),
+                'views.py': this.getViewsPy()
             };
         },
 
