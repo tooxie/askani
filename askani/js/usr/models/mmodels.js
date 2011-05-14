@@ -97,7 +97,7 @@ $(function () {
                 key;
             defaults = {
                 base_class: '',
-                docstring: '',
+                docstring: this.get('name') + ' model.',
                 has_meta: false,
                 meta_options: meta_options
             };
@@ -198,7 +198,7 @@ $(function () {
                 mlen,
                 x;
             code = 'class ' + this.get('name') + '(' + m + 'Model):\n' +
-                   '    """' + this.get('docstring') + '\n\n    """\n\n';
+                   '    """\n    ' + this.get('docstring') + '\n    """\n\n';
             fields = this.get('fields');
             flen = fields.length;
             methods = this.get('methods');

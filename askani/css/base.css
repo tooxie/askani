@@ -95,17 +95,45 @@ span.error {
     color:gray;
     cursor:move;
 }
+.app-menu {
+    background-color:white;
+    border:1px solid gray;
+    display:none;
+    min-width:10em;
+    position:absolute;
+    text-align:left;
+    top:22px;
+}
+.app-menu ul {
+    margin:0;
+    padding:0;
+}
+.app-menu ul li {
+    border-top:1px solid #CCC;
+    list-style-type:none;
+}
+.app-menu ul li.first {
+    border:none;
+}
+.app-menu ul li a {
+    display:block;
+    padding:0.5em 2em;
+}
+.app-menu-trigger {
+    background-image:url('../img/arrow.png');
+    cursor:pointer;
+    height:16px;
+    position:absolute;
+    right:10px;
+    top:5px;
+    width:16px;
+}
 .app-name {
     font-size:3em;
     font-weight:bold;
     height:100%;
     margin:1em;
     position:relative;
-}
-.app-models {
-    position:absolute;
-    right:10px;
-    top:5px;
 }
 .app .models {
     display:none;

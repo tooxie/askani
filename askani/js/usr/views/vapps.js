@@ -31,12 +31,17 @@ $(function () {
         template: _.template($('#app-template').html()),
 
         events: $.extend({}, AskaniView.prototype.events, {
-            'dblclick .app, .app-name': 'zoomIn'
+            'click .app-edit': 'edit',
+            'click .app-menu-trigger': 'triggerMenu',
+            'click .app-models': 'zoomIn'
         }),
 
         render: function () {
             var models = this.model.get('models');
             AskaniView.prototype.render.call(this);
+            $(this.el).draggable({
+                cancel: '.cancel-draggable'
+            });
             if (models) {
                 models.each(function (el, i) {
                     view = new DjangoModelView({
@@ -61,14 +66,63 @@ $(function () {
             return false;
         },
 
+        edit: function (e) {
+            var app,
+                target = $(e.target);
+            app = App.collection.get(target.closest('.app').attr('id'));
+            $.jPrompt(_.template($('#app-name-template').html())({
+                app: app,
+                label: 'Model name',
+                object: this.model
+            }), {
+                context: {
+                    target: target,
+                    view: this
+                },
+                resizable: true,
+                submit: function (context) {
+                    context.view.save(context.target);
+                }
+            });
+            return false;
+        },
+
+        save: function (target) {
+            var app,
+                app_id = target.closest('.app').attr('id'),
+                input = $('#app-name-input');
+            app = App.collection.get(app_id);
+            app.save({name: input.val()});
+            App.render();  // Warum nicht this.render()?
+            return false;
+        },
+
+        triggerMenu: function (e) {
+            var menu,
+                target = $(e.target),
+                width;
+            menu = target.closest('.app').find('.app-menu');
+            width = menu.width();  // Hack
+            menu.css('left', target.position().left);
+            if (!menu.is(':visible')) {
+                menu.css('width', width + 1);  // Ugly hack =(
+            }
+            menu.toggle('fade');
+            return false;
+        },
+
         zoomIn: function (e) {
-            var app = $(e.target).closest('.app');
+            var app,
+                menu,
+                target = $(e.target);
+            app = target.closest('.app');
+            menu = app.find('.app-menu');
+            menu.hide('fade');
             window.CurrentDjangoApp = this;
             this.hideAll(app);
             this.collection.trigger('zoom', this);
             window.location.href = '#' + this.model.get('name') + '/models.py';
         },
-
 
         hideAll: function (except) {
             all = $('.app[id!="' + except.attr('id') + '"]').fadeOut(1000);

@@ -74,9 +74,10 @@ $(function () {
         },
 
         modelsCount: function () {
-            if (this.get('models')) {
+            if (this.get('has_models')) {
                 return this.get('models').size();
             }
+            return 0;
         },
 
         toPython: function () {

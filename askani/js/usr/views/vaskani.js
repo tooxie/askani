@@ -30,7 +30,7 @@ $(function () {
         events: $.extend({}, AskaniView.prototype.events, {
             'click #to-python': 'toPython',
             'click #to-json': 'toJSON',
-            'click #kill-all': 'destroyTheWorld'
+            'click #destroy-all': 'destroyTheWorld'
         }),
 
         create: function (e) {
@@ -106,7 +106,7 @@ $(function () {
                 $('#' + object.id).hide('explode', {}, 1000).remove();
                 object.destroy();
             }
-            $('#kill-all').fadeOut(2000);
+            $('#destroy-all').fadeOut(2000);
             $('#to-python').fadeOut(2000);
             $('#to-json').fadeOut(2000);
             CurrentDjangoApp = undefined;

@@ -60,8 +60,8 @@ $(function () {
             }
         }),
 
-        NothingToKillError: Exception.extend({
-            message: 'Nothing to kill =('
+        NothingToDestroyError: Exception.extend({
+            message: 'Nothing to destroy =('
         }),
 
         InvalidSignatureError: Exception.extend({

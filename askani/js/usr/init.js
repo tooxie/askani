@@ -22,17 +22,17 @@ function initAppdesigner(app) {
     if ($('.app').size()) {
         if (app) {
             if (app.get('models').size()) {
-                $('#kill-all').show();
+                $('#destroy-all').show();
             } else {
-                $('#kill-all').hide();
+                $('#destroy-all').hide();
             }
         } else {
-            $('#kill-all').show();
+            $('#destroy-all').show();
         }
         $('#to-python').show();
         $('#to-json').show();
     } else {
-        $('#kill-all').hide();
+        $('#destroy-all').hide();
         $('#to-python').hide();
         $('#to-json').hide();
     }
@@ -100,8 +100,12 @@ $(document).ready(function () {
         App.output(App.toJSON());
         return false;
     });
-    $('#kill-all').click(function () {
-        App.destroyTheWorld();
+    $('#destroy-all').click(function () {
+        $.jConfirm('Destroy everything?', {
+            submit: function (params) {
+                App.destroyTheWorld();
+            }
+        });
     });
     if (DjangoApps.size() === 0) {
         $('#new-app').attr('title', 'Start here').tipsy({
@@ -111,12 +115,12 @@ $(document).ready(function () {
     } else {
         $('#to-python').removeClass('invisible');
         $('#to-json').removeClass('invisible');
-        $('#kill-all').removeClass('invisible');
+        $('#destroy-all').removeClass('invisible');
     }
     DjangoApps.bind('add', function () {
         $('#to-python').fadeIn(2000);
         $('#to-json').fadeIn(2000);
-        $('#kill-all').fadeIn(2000);
+        $('#destroy-all').fadeIn(2000);
     }).bind('zoom', function (app) {
         $(app.el).queue('fx', function () {
             $('#to-appdesigner').show()

@@ -170,7 +170,7 @@ $(function () {
         tagName: 'div',
 
         events: {
-            'click .object-kill': 'destroy',
+            'click .object-destroy': 'destroy',
             'click .object-new': 'create',
             'click': 'raise',
             'dragstop': 'saveCoords'
@@ -391,7 +391,7 @@ $(function () {
 
         destroy: function (e) {
             var model = this.collection.get(this.getObject(e).attr('id'));
-            $.jConfirm('Kill model ' + model.get('name') + '?', {
+            $.jConfirm('Destroy ' + model.get('name') + '?', {
                 context: {
                     model: model,
                     collection: this.collection,

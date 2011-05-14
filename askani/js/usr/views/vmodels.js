@@ -270,7 +270,7 @@ $(function () {
         template: _.template($('#model-field-template').html()),
 
         events: {
-            'click .model-field-kill': 'destroy',
+            'click .model-field-destroy': 'destroy',
             'dblclick .model-field .type, .model-field .name': 'edit'
         },
 
@@ -297,7 +297,7 @@ $(function () {
             model = CurrentDjangoApp.model.get('models').get(model_id);
             fields = model.get('fields');
             field = fields.get(target.closest('.model-field').attr('id'));
-            $.jConfirm('Kill field ' + field.get('name') + '?', {
+            $.jConfirm('Destroy field ' + field.get('name') + '?', {
                 submit: function (params) {
                     params.view.model.destroy();
                     params.field.destroy();
@@ -379,7 +379,7 @@ $(function () {
         template: _.template($('#model-method-template').html()),
 
         events: {
-            'click .model-method-kill': 'destroy',
+            'click .model-method-destroy': 'destroy',
             'dblclick .signature': 'edit'
         },
 
@@ -400,7 +400,7 @@ $(function () {
             model = CurrentDjangoApp.model.get('models').get(model_id);
             methods = model.get('methods');
             method = methods.get(target.closest('.model-method').attr('id'));
-            $.jConfirm('Kill method ' + method.get('name') + '?', {
+            $.jConfirm('Destroy method ' + method.get('name') + '?', {
                 submit: function (params) {
                     params.view.model.destroy();
                     params.method.destroy();
