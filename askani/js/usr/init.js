@@ -123,7 +123,7 @@ $(document).ready(function () {
         $('#destroy-all').fadeIn(2000);
     }).bind('zoom', function (app) {
         $(app.el).queue('fx', function () {
-            $('#to-appdesigner').show()
+            $('#to-appdesigner').show();
             $('#new-app').hide();
             if (!window.CurrentDjangoApp.model.get('has_models')) {
                 $('#new-model').attr('title', 'Create models').tipsy({

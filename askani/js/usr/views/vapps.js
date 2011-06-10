@@ -33,7 +33,8 @@ $(function () {
         events: $.extend({}, AskaniView.prototype.events, {
             'click .app-edit': 'edit',
             'click .app-menu-trigger': 'triggerMenu',
-            'click .app-models': 'zoomIn'
+            'click .app-models': 'zoomIn',
+            'click .to-python': 'toPython'
         }),
 
         render: function () {
@@ -122,6 +123,10 @@ $(function () {
             this.hideAll(app);
             this.collection.trigger('zoom', this);
             window.location.href = '#' + this.model.get('name') + '/models.py';
+        },
+
+        toPython: function (e) {
+            App.output(AskaniView.prototype.toPython(e));
         },
 
         hideAll: function (except) {
